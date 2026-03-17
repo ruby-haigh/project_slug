@@ -2,30 +2,23 @@ package com.makersacademy.acebook.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import static java.lang.Boolean.TRUE;
 
 @Data
 @Entity
+@Getter @Setter @NoArgsConstructor
 @Table(name = "USERS")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String username;
-    private boolean enabled;
+    private String email;
 
-    public User() {
-        this.enabled = TRUE;
-    }
-
-    public User(String username) {
-        this.username = username;
-        this.enabled = TRUE;
-    }
-
-    public User(String username, boolean enabled) {
-        this.username = username;
-        this.enabled = enabled;
+    public User(String email) {
+        this.email = email;
     }
 }

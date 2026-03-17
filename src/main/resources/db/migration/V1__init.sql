@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS posts;
+DROP TABLE IF EXISTS users;
 
-CREATE TABLE posts (
+CREATE TABLE users (
   id bigserial PRIMARY KEY,
-  content varchar(250) NOT NULL
+  email varchar(250) NOT NULL
 );
