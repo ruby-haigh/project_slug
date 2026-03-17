@@ -18,7 +18,7 @@ Below, you'll find specific learning objectives for each tool.
 - Open the codebase in an IDE like InteliJ or VSCode
   - If using IntelliJ, accept the prompt to install the Lombok plugin (if you don't get prompted, press command and comma
   to open the Settings and go to Plugins and search for Lombok made by Jetbrains and install).
-- Create two new Postgres databases called `acebook_springboot_development` and `acebook_springboot_test`
+- Create two new Postgres databases called `slug_development` and `slug_test`
 - Install Maven `brew install maven`
 - [Set up Auth0](https://journey.makers.tech/pages/auth0) (you only need the "Create an Auth0 app" section)
 - Build the app and start the server, using the Maven command `mvn spring-boot:run`
