@@ -9,8 +9,6 @@
     <p th:text="${user.getName()}"></p>
     <p th:text="${user.getBio()}"></p>
 
-    <button>Edit your profile</button>
-
     <form action="#" th:action="@{/users/{id}(id=${user.id})}" th:object="${user}" method="post">
         <label th:for="name">Name:
             <input type="text" th:field="*{name}" />
@@ -21,5 +19,6 @@
         <input type="submit" value="submit" />
         <input type="reset" value="reset"/>
     </form>
+    <a href="/"><button>Back</button></a>
 </body>
 </html>
