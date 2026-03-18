@@ -80,7 +80,7 @@ public class GroupController {
     public String inviteUser(@PathVariable Long groupId, @RequestParam String email) {
         User user = userRepository
                 .findUserByEmail(email)
-                .orElseGet(() -> userRepository.save(new User(email)));
+                .orElseGet(() -> userRepository.save(new User(email, "", "")));
 
         Group group = groupRepository.findById(groupId).orElseThrow();
 
@@ -104,7 +104,7 @@ public class GroupController {
         // If user already exists, use that, otherwise create
         User user = userRepository
                 .findUserByEmail(email)
-                .orElseGet(() -> userRepository.save(new User(email)));
+                .orElseGet(() -> userRepository.save(new User(email, "", "")));
 
         Group group = groupRepository.findById(groupId).orElseThrow();
 
