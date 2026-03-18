@@ -1,0 +1,4 @@
+CREATE TABLE prompts(
+    id BIGSERIAL PRIMARY KEY,
+    prompt VARCHAR(255)
+);
