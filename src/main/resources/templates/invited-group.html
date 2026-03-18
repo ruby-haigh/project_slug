@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Invited Group</title>
+</head>
+<body>
+<h1>You were invited to this group:</h1>
+
+<div th:each="group : ${groups}">
+    <p><strong th:text="${group.name}"></strong></p>
+</div>
+
+<a href="/groups">Back to your groups</a>
+</body>
+</html>
