@@ -6,6 +6,7 @@ import com.makersacademy.acebook.model.User;
 import com.makersacademy.acebook.repository.GroupMembershipRepository;
 import com.makersacademy.acebook.repository.GroupRepository;
 import com.makersacademy.acebook.repository.UserRepository;
+import com.makersacademy.acebook.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
@@ -25,6 +26,9 @@ public class GroupController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private EmailService emailService;
 
     private User getCurrentUser() {
         DefaultOidcUser principal = (DefaultOidcUser) SecurityContextHolder
@@ -78,8 +82,16 @@ public class GroupController {
 
         Group group = groupRepository.findById(groupId).orElseThrow();
 
-        GroupMembership membership = new GroupMembership(user, group);
-        membershipRepository.save(membership);
+        // Only add membership if they aren't already in the group
+        boolean alreadyMember = membershipRepository.findByUserAndGroup(user, group).isPresent();
+        if (!alreadyMember) {
+            GroupMembership membership = new GroupMembership(user, group);
+            membershipRepository.save(membership);
+        }
+
+        // Send invite email
+        String inviteLink = "http://localhost:8080/groups"; // need to make a real join link!!
+        emailService.sendInvite(email, group.getName(), inviteLink);
 
         return "redirect:/groups";
     }
