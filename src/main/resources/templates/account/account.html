@@ -8,17 +8,8 @@
     <h3 th:text="'Account page: ' + ${user.getEmail()}"></h3>
     <p th:text="${user.getName()}"></p>
     <p th:text="${user.getBio()}"></p>
+    <a th:href="'/users/' + ${user.getId()} + '/edit'"><button>Edit Account</button></a>
 
-    <form action="#" th:action="@{/users/{id}(id=${user.id})}" th:object="${user}" method="post">
-        <label th:for="name">Name:
-            <input type="text" th:field="*{name}" />
-        </label>
-        <label th:for="bio">Bio:
-            <input type="text" th:field="*{bio}" />
-        </label>
-        <input type="submit" value="submit" id="submit-user-form" />
-        <input type="reset" value="reset"/>
-    </form>
     <a href="/"><button>Back</button></a>
 </body>
 </html>

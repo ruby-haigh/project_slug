@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Account</title>
+</head>
+<body>
+<h3>Edit Your Details</h3>
+<form action="#" th:action="@{/users/{id}/edit(id=${user.id})}" th:object="${user}" method="post">
+    <label th:for="name">Name:
+        <input type="text" th:field="*{name}" />
+    </label>
+    <br>
+    <label th:for="bio">Bio:
+        <input type="text" th:field="*{bio}" />
+    </label>
+    <br>
+    <input type="submit" value="Submit" id="submit-user-form" />
+    <button onclick="location.href='account.html'" >Cancel</button>
+</form>
+</body>
+</html>
