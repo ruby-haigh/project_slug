@@ -13,6 +13,7 @@
     <div class="d-flex gap-3">
         <a href="/circles" class="nav-link">Circles</a>
         <a href="/circles/new" class="nav-link">Create Circle</a>
+        <span class="text-muted small" th:text="${loggedInUser?.email}"></span>
     </div>
 </nav>
 
