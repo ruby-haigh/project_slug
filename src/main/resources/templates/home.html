@@ -5,57 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Project Slug</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="main.css" rel="stylesheet">
 </head>
 <body>
-
-<nav class="navbar navbar-light bg-light px-4">
-    <span class="navbar-brand fw-bold">Project Slug</span>
-    <div class="d-flex gap-3">
-        <a href="/circles" class="nav-link">Circles</a>
-        <a href="/circles/new" class="nav-link">Create Circle</a>
-        <a th:href="'/users/' + ${loggedInUser?.getId()}"><span class="text-muted small" th:text="${loggedInUser?.email}"></span></a>
-    </div>
-</nav>
-
+<div th:replace="fragments/navbar :: navbar"></div>
 <div class="container mt-5">
-    <h1 class="text-center mb-2">Your Circles</h1>
+    <h1 class="text-center mb-2">Monthly Moments</h1>
     <p class="text-center text-muted mb-4">Monthly updates from the people you care about</p>
 
-    <div class="row justify-content-center mb-4">
+    <div class="scrapbook-row">
 
-        <!--placeholders - waiting for circle functionality -->
-        <div class="col-md-3 mb-3">
-            <div class="card text-center p-3">
-                <h5 class="card-title">Placeholder1</h5>
-                <p class="text-muted">x members</p>
-                <span class="badge bg-success">March Issue Ready</span>
-            </div>
+        <div class="circle-card" style="--rotation: -2deg;">
+            <img src="/images/sad_slug.png" class="rounded-img mx-auto d-block" alt="Group 1">
+            <h5 class="text-center">Placeholder1</h5>
+            <p class="text-center text-muted">x members</p>
+            <span class="badge bg-success">March Issue Ready</span>
         </div>
 
-        <div class="col-md-3 mb-3">
-            <div class="card text-center p-3">
-                <h5 class="card-title">Placeholder2</h5>
-                <p class="text-muted">y members</p>
-                <span class="badge bg-success">March Issue Ready</span>
-            </div>
+        <div class="card" style="--rotation: 3deg;">
+            <img src="/images/sad_slug.png" class="rounded-img mx-auto d-block" alt="Group 2">
+            <h5 class="text-center">Placeholder2</h5>
+            <p class="text-center text-muted">y members</p>
+            <span class="badge bg-success">March Issue Ready</span>
         </div>
 
-        <div class="col-md-3 mb-3">
-            <div class="card text-center p-3">
-                <h5 class="card-title">Placeholder3</h5>
-                <p class="text-muted">z members</p>
-                <span class="badge bg-secondary">Next issue in 5 days</span>
-            </div>
+        <div class="circle-card" style="--rotation: -1deg;">
+            <img src="/images/sad_slug.png" class="rounded-img mx-auto d-block" alt="Group 3">
+            <h5 class="text-center">Placeholder3</h5>
+            <p class="text-center text-muted">z members</p>
+            <span class="badge bg-secondary">Next issue in 5 days</span>
         </div>
 
     </div>
 
-    <div class="d-flex justify-content-center gap-3 mb-5">
-        <a href="/circles/new" class="btn btn-primary">+ Create New Circle</a>
+    <div class="d-flex justify-content-center gap-3 mt-5 mb-5 flex-wrap">
+        <a href="/groups" class="btn btn-primary">+ Create New Circle</a>
         <a href="/circles/join" class="btn btn-outline-secondary">Join via Invite Link</a>
     </div>
 
-    <div class="card text-center p-4 mx-auto" style="max-width: 700px;">
+    <div class="card text-center p-4 mx-auto" style="max-width: 700px; background: #fffdf6; border-radius: 15px; box-shadow: 0 8px 15px rgba(0,0,0,0.1);">
         <h5>How It Works</h5>
         <p class="text-muted">Each month, everyone in your circle receives an email with 4 prompts. After 7 days, all responses are compiled into a magazine-style issue that captures your group's monthly moments.</p>
     </div>

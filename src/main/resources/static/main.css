@@ -1,3 +1,30 @@
+/* ─────────────────────────────────────────────────────────
+   ROOT VARIABLES
+   ───────────────────────────────────────────────────────── */
+:root {
+    --color-primary:        #034732;
+    --color-primary-hover:  #0f4d03;
+    --color-primary-light:  #dbd4c3;
+    --color-primary-text:   #ffffff;
+    --color-primary-rgb:    124, 58, 237;
+
+    --color-bg:      #f0e5cc;
+    --color-bg-2:    #dbd4c3;
+    --color-surface: #ffffff;
+    --color-border:  #f2e7ce;
+
+    --color-text-primary:   #2f3e34;
+    --color-text-secondary: #4f6f5d;
+    --color-text-muted:     #8a8f85;
+
+    --color-danger:         #b04a3a;
+    --color-danger-hover:   #8f3b2e;
+
+    --color-like:           #c96a5a;
+}
+
+
+
 .posts-main {
     border-collapse: collapse;
 }
@@ -7,4 +34,96 @@
     padding: 0.5rem;
     text-align: left;
     margin-bottom: 0.5rem;;
+}
+
+body {
+    background: #fef9f3 url('https://www.toptal.com/designers/subtlepatterns/patterns/paper_fibers.png'); /* subtle paper texture */
+    background-size: cover;
+
+}
+
+h1 {
+    font-family: "Times New Roman", Times, serif;
+}
+.circle-card {
+    min-height: 250px;
+    border-radius: 15px;
+    padding: 20px;
+    background: #fffdf6;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+    transform: rotate(var(--rotation));
+    transition: transform 0.2s;
+}
+
+.card {
+    min-height: 250px;
+    border-radius: 5px;
+    padding: 20px;
+    background: #fffdf6;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+    transform: rotate(var(--rotation));
+    transition: transform 0.2s;
+}
+
+.circle-card:hover {
+    transform: rotate(0deg) scale(1.05);
+}
+.card:hover {
+    transform: rotate(0deg) scale(1.05);
+}
+
+.rounded-img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    border: 2px solid #eee;
+}
+
+.scrapbook-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* ─── Navbar ─────────────────────────────────────────────── */
+
+.navbar-main {
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    padding: 0 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.navbar-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-family: "Times New Roman", Times, serif;
+    color: var(--color-primary);
+    text-decoration: none;
+    letter-spacing: -0.3px;
+    flex-shrink: 0;
+}
+
+/* ─── Buttons ─────────────────────────────────────────────── */
+
+.btn-primary {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-primary-text);
 }
