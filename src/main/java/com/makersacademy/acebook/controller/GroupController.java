@@ -32,29 +32,32 @@ public class GroupController {
     @Autowired
     private EmailService emailService;
 
-    // Utility to get currently logged-in user
     private User getCurrentUser() {
         DefaultOidcUser principal = (DefaultOidcUser) SecurityContextHolder
                 .getContext()
                 .getAuthentication()
                 .getPrincipal();
-
         String email = (String) principal.getAttributes().get("email");
         return userRepository.findUserByEmail(email).orElseThrow();
     }
 
-    // Dashboard: create group + list groups
+    // Dashboard page
     @GetMapping
     public String getGroupsPage(Model model) {
         User user = getCurrentUser();
         List<Group> groups = membershipRepository.findGroupsByUser(user);
-        if (groups == null) groups = List.of(); // never null
+        if (groups == null) groups = List.of();
         model.addAttribute("groups", groups);
-        return "groups"; // Thymeleaf template
+        return "groups";
     }
 
-    // Create a new group
-    @PostMapping
+    // Separate "Create Circle" page
+    @GetMapping("/create")
+    public String getCreateCirclePage() {
+        return "create-circle"; // new Thymeleaf template
+    }
+
+    @PostMapping("/create")
     public String createGroup(@RequestParam String name) {
         Group group = new Group(name);
         groupRepository.save(group);
@@ -63,8 +66,9 @@ public class GroupController {
         GroupMembership membership = new GroupMembership(user, group);
         membershipRepository.save(membership);
 
-        return "redirect:/groups";
+        return "redirect:/groups"; // back to dashboard
     }
+
 
     // Rename a group
     @PostMapping("/{id}/update")
@@ -75,7 +79,7 @@ public class GroupController {
         return "redirect:/groups";
     }
 
-    // Invite a user to a group
+    // Invite a user
     @PostMapping("/{groupId}/invite")
     public String inviteUser(@PathVariable Long groupId, @RequestParam String email) {
         User user = userRepository
@@ -84,24 +88,20 @@ public class GroupController {
 
         Group group = groupRepository.findById(groupId).orElseThrow();
 
-        // Only add membership if not already a member
         boolean alreadyMember = membershipRepository.findByUserAndGroup(user, group).isPresent();
         if (!alreadyMember) {
             GroupMembership membership = new GroupMembership(user, group);
             membershipRepository.save(membership);
         }
 
-        // Send invite email with clickable link
         String inviteLink = "http://localhost:8080/groups/" + group.getId() + "/join?email=" + email;
         emailService.sendInvite(email, group.getName(), inviteLink);
 
         return "redirect:/groups";
     }
 
-    // Join a group via invite link
     @GetMapping("/{groupId}/join")
     public String joinGroup(@PathVariable Long groupId, @RequestParam String email) {
-        // If user already exists, use that, otherwise create
         User user = userRepository
                 .findUserByEmail(email)
                 .orElseGet(() -> userRepository.save(new User(email)));
