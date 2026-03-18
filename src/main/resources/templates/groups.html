@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Groups</title>
+</head>
+<body>
+
+<h1>Your Groups</h1>
+
+<!-- create group -->
+<form action="/groups" method="post">
+    <input type="text" name="name" placeholder="Group name" required>
+    <button type="submit">Create Group</button>
+</form>
+
+<hr>
+
+<!-- display groups -->
+<ul>
+    <li th:each="group : ${groups}">
+
+        <!-- Group Name -->
+        <strong th:text="${group.name}"></strong>
+
+        <!-- edit group -->
+        <form th:action="@{'/groups/' + ${group.id} + '/update'}" method="post">
+            <input type="text" name="name" placeholder="New name">
+            <button type="submit">Update</button>
+        </form>
+
+        <!-- invite user -->
+        <form th:action="@{'/groups/' + ${group.id} + '/invite'}" method="post">
+            <input type="email" name="email" placeholder="Invite by email">
+            <button type="submit">Invite</button>
+        </form>
+
+        <hr>
+    </li>
+</ul>
+
+</body>
+</html>

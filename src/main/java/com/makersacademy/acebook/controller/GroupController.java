@@ -9,13 +9,14 @@ import com.makersacademy.acebook.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
-@RestController
+@Controller
 @RequestMapping("/groups")
 public class GroupController {
+
     @Autowired
     private GroupRepository groupRepository;
 
@@ -35,45 +36,51 @@ public class GroupController {
 
         return userRepository.findUserByEmail(email).orElseThrow();
     }
+
+    // show groups page
+    @GetMapping
+    public String getGroupsPage(Model model) {
+        model.addAttribute("groups", groupRepository.findAll());
+        return "groups";
+    }
+
+    // create group
     @PostMapping
-    public Group createGroup(@RequestBody Map<String, String> body) {
+    public String createGroup(@RequestParam String name) {
 
-        //get the group name
-        String name = body.get("name");
-
-        //create the group
-        Group group = new Group(name);
+        Group group = new Group(name); // add default frequency in model if needed
         groupRepository.save(group);
 
-        //get current user
         User user = getCurrentUser();
-
-        //link user to group - this user belongs to this group
         GroupMembership membership = new GroupMembership(user, group);
         membershipRepository.save(membership);
 
-        return group;
+        return "redirect:/groups";
     }
-    //Edit Group Name
-    @PutMapping("/{id}")
-    public Group updateGroup(@PathVariable Long id, @RequestBody Map<String, String> body) {
-        Group group = groupRepository.findById(id).orElseThrow();
-        group.setName(body.get("name"));
-        return groupRepository.save(group);
 
+    // update group name
+    @PostMapping("/{id}/update")
+    public String updateGroup(@PathVariable Long id, @RequestParam String name) {
+        Group group = groupRepository.findById(id).orElseThrow();
+        group.setName(name);
+        groupRepository.save(group);
+
+        return "redirect:/groups";
     }
-    //invite users
+
+    // invite user
     @PostMapping("/{groupId}/invite")
-    public String inviteUser(@PathVariable Long groupId, @RequestBody Map<String, String> body) {
-        String email = body.get("email");
+    public String inviteUser(@PathVariable Long groupId, @RequestParam String email) {
+
         User user = userRepository
                 .findUserByEmail(email)
                 .orElseGet(() -> userRepository.save(new User(email)));
+
         Group group = groupRepository.findById(groupId).orElseThrow();
+
         GroupMembership membership = new GroupMembership(user, group);
         membershipRepository.save(membership);
-        return "User added to group";
 
+        return "redirect:/groups";
     }
-
 }
