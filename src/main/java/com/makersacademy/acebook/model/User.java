@@ -17,8 +17,16 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String email;
+    private String name;
+    private String bio;
 
     public User(String email) {
         this.email = email;
+    }
+
+    public User(String email, String name, String bio) {
+        this.email = email;
+        this.name = name;
+        this.bio = bio;
     }
 }
