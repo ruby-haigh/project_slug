@@ -50,7 +50,14 @@ public class UsersController {
         return "account/account";
     }
 
-    @PostMapping("/users/{id}")
+    @GetMapping("/users/{id}/edit")
+    public String editAccountForm(@PathVariable Long id, Model model) {
+        Optional<User> user = userRepository.findById(id);
+        model.addAttribute("user", user.get());
+        return "account/edit-account-form";
+    }
+
+    @PostMapping("/users/{id}/edit")
     public RedirectView updateAccount(@RequestParam String name, @RequestParam String bio, @PathVariable Long id) {
         Optional <User> currentUser = userRepository.findById(id);
         currentUser.get().setName(name);
