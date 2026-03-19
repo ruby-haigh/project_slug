@@ -3,7 +3,7 @@
         <a class="nav-link" href="/"><span class="navbar-brand fw-bold">🐌 Snail Mail</span></a>
         <div class="d-flex gap-3 align-items-center">
             <a href="/groups" class="nav-link">Circles</a>
-            <a href="/circles/new" class="nav-link">Create Circle</a>
+            <a href="/groups/create" class="nav-link">Create Circle</a>
             <a class="nav-link" th:href="'/users/' + ${loggedInUser?.getId()}" ><span class="text-muted small" th:text="${loggedInUser?.email}"></span></a>
         </div>
     </div>
