@@ -14,15 +14,16 @@
 <!-- Navbar -->
 <div th:replace="fragments/navbar :: navbar"></div>
 
-<div class="container mt-5">
+<div class="container home-shell mt-5">
 
     <!-- Header -->
-    <h1 class="text-center mb-2">Monthly Moments</h1>
-    <p class="text-center text-muted mb-4">
+    <h1 class="text-center home-title">Monthly Moments</h1>
+    <div class="home-squiggle"></div>
+    <p class="text-center home-subtitle">
         Monthly updates from the people you care about
     </p>
 
-    <div th:if="${#lists.isEmpty(groups)}" class="text-center mt-5">
+    <div th:if="${#lists.isEmpty(groups)}" class="text-center mt-5 p-5 home-empty-state">
         <p class="text-muted">You're not in any circles yet 💌</p>
 
         <div class="d-flex justify-content-center gap-3 mt-4 flex-wrap">
@@ -35,49 +36,113 @@
     <div th:if="${!#lists.isEmpty(groups)}">
 
         <div class="scrapbook-row">
+            <th:block th:each="group, iterStat : ${groups}" th:if="${iterStat.index < 3}">
+                <div class="circle-card home-card home-card-family card-tilt-left" th:if="${iterStat.index == 0}">
+                    <div class="home-card-body text-center">
+                        <div class="home-card-illustration">
+                            <div class="home-card-icon">☺</div>
+                        </div>
 
-            <div class="circle-card"
-                 th:each="group, iterStat : ${groups}"
-                 th:if="${iterStat.index < 3}"
-                 th:style="'--rotation:' + (${iterStat.index % 2 == 0} ? '-1.5deg' : '1.5deg')">
+                        <h5 class="home-card-title" th:text="${group.name}">Group Name</h5>
+                        <p class="home-card-meta">lovely monthly circle</p>
 
-                <img src="/images/sad_slug.png" class="rounded-img mx-auto d-block" alt="Group">
+                        <div class="mt-auto pt-3">
+                            <span class="home-card-pill pill-tilt-right">
+                                <span class="home-card-pill-icon">✦</span>
+                                <span>March issue ready</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
 
-                <h5 class="text-center" th:text="${group.name}">Group Name</h5>
+                <div class="circle-card home-card home-card-friends card-tilt-right" th:if="${iterStat.index == 1}">
+                    <div class="home-card-body text-center">
+                        <div class="home-card-illustration">
+                            <div class="home-card-icon">✧</div>
+                        </div>
 
-                <p class="text-center text-muted">Members</p>
+                        <h5 class="home-card-title" th:text="${group.name}">Group Name</h5>
+                        <p class="home-card-meta">shared little updates</p>
 
-                <span class="badge bg-secondary">Monthly Circle</span>
-            </div>
+                        <div class="mt-auto pt-3">
+                            <span class="home-card-pill pill-tilt-left">
+                                <span class="home-card-pill-icon">✦</span>
+                                <span>March issue ready</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="circle-card home-card home-card-work card-tilt-left" th:if="${iterStat.index == 2}">
+                    <div class="home-card-body text-center">
+                        <div class="home-card-illustration">
+                            <div class="home-card-icon">✉</div>
+                        </div>
+
+                        <h5 class="home-card-title" th:text="${group.name}">Group Name</h5>
+                        <p class="home-card-meta">letters worth keeping</p>
+
+                        <div class="mt-auto pt-3">
+                            <span class="home-card-pill pill-tilt-right">
+                                <span class="home-card-pill-icon">☷</span>
+                                <span>Next issue in 5 days</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
         </div>
 
         <!-- view all button -->
-        <div class="text-center mt-4">
-            <a href="/groups" class="btn btn-outline-primary">
+        <div class="home-cta-row mt-4">
+            <a href="/groups" class="home-cta-pill home-cta-pill-secondary">
+                <span class="home-cta-icon">☰</span>
                 View All Circles
             </a>
         </div>
 
         <!-- action buttons -->
-        <div class="d-flex justify-content-center gap-3 mt-4 mb-5 flex-wrap">
-            <a href="/groups" class="btn btn-primary">+ Create New Circle</a>
-            <a href="/circles/join" class="btn btn-outline-secondary">Join via Invite Link</a>
+        <div class="home-cta-row mt-4 mb-5">
+            <a href="/groups" class="home-cta-pill home-cta-pill-primary">
+                <span class="home-cta-icon">＋</span>
+                Create New Circle
+            </a>
+            <a href="/circles/join" class="home-cta-pill home-cta-pill-tertiary">
+                <span class="home-cta-icon">✉</span>
+                Join via Invite Link
+            </a>
         </div>
 
     </div>
 
-    <div class="card text-center p-4 mx-auto"
-         style="max-width: 700px; background: #fffdf6; border-radius: 15px; box-shadow: 0 8px 15px rgba(0,0,0,0.1);">
+    <div class="home-info-card text-center mx-auto">
+        <div class="home-info-doodle home-info-doodle-heart">♡</div>
+        <div class="home-info-doodle home-info-doodle-star">✧</div>
 
-        <h5>How It Works</h5>
+        <div class="home-info-inner">
+            <h5 class="home-info-title">How it works</h5>
 
-        <p class="text-muted">
-            Each month, everyone in your circle receives an email with 4 prompts.
-            After 7 days, all responses are compiled into a magazine-style issue
-            that captures your group's monthly moments.
-        </p>
+            <p class="home-info-text">
+                Each month, everyone in your circle receives an email with 4 thoughtful prompts.
+                After 7 days, all responses are compiled into a beautiful, magazine-style issue that
+                captures your group's monthly moments.
+            </p>
 
+            <div class="home-info-actions">
+                <span class="home-step-pill home-step-pill-blue">
+                    <span class="home-step-icon">✉</span>
+                    <span>Get email</span>
+                </span>
+                <span class="home-step-pill home-step-pill-peach">
+                    <span class="home-step-icon">✎</span>
+                    <span>Share update</span>
+                </span>
+                <span class="home-step-pill home-step-pill-pink">
+                    <span class="home-step-icon">☰</span>
+                    <span>Read stories</span>
+                </span>
+            </div>
+        </div>
     </div>
 
 </div>
