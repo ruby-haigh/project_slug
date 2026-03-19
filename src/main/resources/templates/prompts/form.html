@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Prompt Form</title>
+</head>
+<body>
+
+<!-- Page heading -->
+<h1 th:text="'Prompt form for ' + ${group.name}">Prompt form</h1>
+
+
+<p>It’s time for your monthly update — answer the prompts below.</p>
+
+<!--
+    This form submits all answers for the current group cycle.
+    We send:
+    - groupId in the URL
+    - groupCycleId as a hidden field
+    - promptIds as hidden fields
+    - responseText values as text inputs
+-->
+<form th:action="@{/groups/{groupId}/prompts(groupId=${groupId})}" method="post">
+
+    <!-- Hidden field so backend knows which cycle this form belongs to -->
+    <input type="hidden" name="groupCycleId" th:value="${groupCycleId}" />
+
+    <!-- Loop through each prompt and render an input box -->
+    <div th:each="prompt, iterStat : ${prompts}">
+        <p th:text="${prompt.prompt}">Prompt text goes here</p>
+
+        <!-- Hidden field to send the prompt ID back on submit -->
+        <input type="hidden" name="promptIds" th:value="${prompt.id}" />
+
+        <!-- Text box for the user's answer -->
+        <input type="text" name="responseTexts" placeholder="Type your answer here" />
+    </div>
+
+    <!-- Submit button -->
+    <button type="submit">Submit responses</button>
+</form>
+
+</body>
+</html>
