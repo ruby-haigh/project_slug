@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
+import com.makersacademy.acebook.service.CloudinaryService;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -17,6 +19,9 @@ import java.util.Optional;
 public class UsersController {
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    CloudinaryService cloudinaryService;
 
     @GetMapping("/users/after-login")
     public RedirectView afterLogin() {
@@ -28,7 +33,29 @@ public class UsersController {
         String email = (String) principal.getAttributes().get("email");
         userRepository
                 .findUserByEmail(email)
-                .orElseGet(() -> userRepository.save(new User(email)));
+                .orElseGet(() -> userRepository.save(new User(email, "", "")));
+
+        return new RedirectView("/");
+    }
+
+    @PostMapping("/users/profile-picture")
+    public RedirectView uploadProfilePicture(@RequestParam("file") MultipartFile file) {
+        try {
+            DefaultOidcUser principal = (DefaultOidcUser) SecurityContextHolder
+                    .getContext()
+                    .getAuthentication()
+                    .getPrincipal();
+            String email = (String) principal.getAttributes().get("email");
+            User user = userRepository.findUserByEmail(email).orElseThrow();
+
+            String imageUrl = cloudinaryService.uploadFile(file);
+
+            user.setProfilePictureUrl(imageUrl);
+            userRepository.save(user);
+
+        } catch (Exception e) {
+            System.out.println("Image upload failed: " + e.getMessage());
+        }
 
         return new RedirectView("/");
     }
