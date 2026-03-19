@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+// links prompts to a specific cycle
+// this keeps prompts shared across the group for that cycle
+
 @Data
 @Entity
 @NoArgsConstructor

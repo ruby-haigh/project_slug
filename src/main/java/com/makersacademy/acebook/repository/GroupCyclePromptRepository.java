@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface GroupCyclePromptRepository extends JpaRepository<GroupCyclePrompt, Long> {
 
-    // Get all prompt-link rows for a specific cycle
+    // retrieves prompts assigned to a specific cycle
     List<GroupCyclePrompt> findByGroupCycleId(Long groupCycleId);
 }

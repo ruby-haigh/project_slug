@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+// stores each submitted answer
+// one row = one user + one prompt + one cycle
+
 @Data
 @Entity
 @NoArgsConstructor

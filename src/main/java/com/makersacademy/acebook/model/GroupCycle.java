@@ -11,6 +11,9 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+// represents one update cycle for a group
+// used to separate prompts and responses by time period
+
 @Data
 @Entity
 @NoArgsConstructor

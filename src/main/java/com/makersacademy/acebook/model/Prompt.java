@@ -8,6 +8,9 @@ import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+// maps to the prompts table
+// each row is one question/prompt shown on the update form
+
 @Data
 @Entity
 @NoArgsConstructor
