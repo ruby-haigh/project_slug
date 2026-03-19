@@ -17,10 +17,11 @@
 <div class="container home-shell mt-5">
 
     <!-- Header -->
-    <h1 class="text-center home-title">Monthly Moments</h1>
-    <div class="home-squiggle"></div>
+    <div class="text-center">
+        <img src="/images/snailmail_logo.png" alt="Snail Mail" class="home-logo">
+    </div>
     <p class="text-center home-subtitle">
-        Monthly updates from the people you care about
+        The social app that isn’t in a rush.
     </p>
 
     <div th:if="${#lists.isEmpty(groups)}" class="text-center mt-5 p-5 home-empty-state">
