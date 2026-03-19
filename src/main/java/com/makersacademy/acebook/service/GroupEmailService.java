@@ -6,7 +6,6 @@ import com.makersacademy.acebook.repository.GroupRepository;
 import org.springframework.stereotype.Service;
 
 import javax.swing.*;
-import java.util.List;
 
 @Service
 public class GroupEmailService {
@@ -33,7 +32,7 @@ public class GroupEmailService {
                 .toArray(String[]::new);
 
 
-        emailService.sendSimpleEmail(recipients, "Your Monthly Newsletter", body.toString());
+        emailService.sendSimpleEmail(recipients, "Your Monthly Newsletter", body);
     }
 
 }

@@ -21,9 +21,9 @@ public class NewsletterScheduler {
     }
 
     /**
-     * Run on the 1st of every month at 9 AM
+     * Run on the 7th of every month at 9 AM
      */
-    @Scheduled(cron = "0 18 15 19 * *")
+    @Scheduled(cron = "0 0 9 20 * *")
     public void sendMonthlyNewsletters() {
         List<Group> groups = groupRepository.findAll();
         for (Group g : groups) {
