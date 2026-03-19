@@ -2,16 +2,101 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Circle</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="main.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #fef9f3 url('https://www.toptal.com/designers/subtlepatterns/patterns/paper_fibers.png');
+            background-size: cover;
+            font-family: "Times New Roman", Times, serif;
+        }
+
+        h1, h5 {
+            font-family: "Times New Roman", Times, serif;
+            color: var(--color-text-primary);
+        }
+
+        .circle-card {
+            min-height: 280px;
+            border-radius: 15px;
+            padding: 20px;
+            background: #fffdf6;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+            transform: rotate(var(--rotation));
+            transform-origin: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            transition: transform 0.2s ease;
+            width: 260px;
+        }
+
+        .circle-card:hover {
+            transform: rotate(0deg) scale(1.05);
+        }
+
+        .circle-card img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            border: 2px solid #eee;
+        }
+
+        .circle-card form input {
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        .circle-card form button {
+            margin-top: 5px;
+        }
+
+        .circle-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+    </style>
 </head>
 <body>
-<h1>Create a New Circle</h1>
 
-<form th:action="@{/groups/create}" method="post">
-    <input type="text" name="name" placeholder="Circle name" required>
-    <button type="submit">Create Circle</button>
-</form>
+<!-- Navbar (same fragment as your main page) -->
+<div th:replace="fragments/navbar :: navbar"></div>
 
-<p><a th:href="@{/groups}">Back to Dashboard</a></p>
+<div class="container mt-5">
+
+    <h1 class="text-center mb-3">Create a New Circle</h1>
+    <p class="text-center text-muted mb-4">Start a circle to share monthly moments with your friends</p>
+
+    <div class="circle-container">
+        <div class="circle-card" style="--rotation: -1.5deg;">
+
+            <img src="/images/sad_slug.png" alt="New Circle">
+
+            <h5 class="text-center">Your New Circle</h5>
+
+            <form th:action="@{/groups/create}" method="post" class="d-flex flex-column">
+                <input type="text" name="name" placeholder="Circle name" class="form-control form-control-sm" required>
+                <button type="submit" class="btn btn-primary btn-sm mt-1">Create Circle</button>
+            </form>
+
+            <div class="text-center mt-2">
+                <a th:href="@{/groups}" class="text-decoration-none text-muted">&larr; Back to Dashboard</a>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
