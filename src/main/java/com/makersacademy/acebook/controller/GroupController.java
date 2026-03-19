@@ -50,11 +50,13 @@ public class GroupController {
         model.addAttribute("groups", groups);
         return "groups";
     }
+    //create group
 
-    // Separate "Create Circle" page
     @GetMapping("/create")
-    public String getCreateCirclePage() {
-        return "create-circle"; // new Thymeleaf template
+    public String getCreateCirclePage(Model model) {
+        User loggedInUser = getCurrentUser();
+        model.addAttribute("loggedInUser", loggedInUser);
+        return "create-circle";
     }
 
     @PostMapping("/create")
