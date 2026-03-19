@@ -1,16 +1,18 @@
-# Importing JDK and copying required files
+# Stage 1: Build the application
 FROM eclipse-temurin:17-jdk AS build
 WORKDIR /app
 
+# Install Maven
+RUN apt-get update && apt-get install -y maven
+
+# Copy your project files
 COPY pom.xml .
-COPY mvnw .
-COPY .mvn .mvn
-COPY src src
+COPY src/ src/
 
-RUN chmod +x mvnw
-RUN ./mvnw clean package -DskipTests
+# Build the app
+RUN mvn clean package -DskipTests
 
-# Stage 2: Run the application (lighter image)
+# Stage 2: Runtime image
 FROM eclipse-temurin:17-jre
 WORKDIR /app
 
@@ -19,5 +21,4 @@ COPY --from=build /app/target/*.jar app.jar
 
 # Run the app
 ENTRYPOINT ["java","-jar","app.jar"]
-
 EXPOSE 8080
