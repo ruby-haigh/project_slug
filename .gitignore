@@ -11,4 +11,3 @@ dependency-reduced-pom.xml
 .settings/
 **/.DS_Store
 *.yml
-application-prod.properties
