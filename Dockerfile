@@ -4,7 +4,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y maven
 COPY pom.xml .
 COPY src/ src/
-RUN mvn clean package -DskipTests
+RUN mvn clean package -DskipTests -Dflyway.skip=true -Pprod
 
 # Stage 2: Runtime
 FROM eclipse-temurin:21-jre
