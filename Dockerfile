@@ -1,14 +1,14 @@
-# Stage 1: Build
 FROM eclipse-temurin:21-jdk AS build
 WORKDIR /app
-RUN apt-get update && apt-get install -y maven
+COPY mvnw .
+COPY .mvn .mvn
 COPY pom.xml .
 COPY src/ src/
-RUN mvn clean package -DskipTests -Dflyway.skip=true -Pprod
+RUN chmod +x ./mvnw
+RUN ./mvnw clean package -DskipTests -Dflyway.skip=true
 
-# Stage 2: Runtime
 FROM eclipse-temurin:21-jre
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
-ENTRYPOINT ["java","-jar","app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar", "--spring.profiles.active=prod"]
 EXPOSE 8080
