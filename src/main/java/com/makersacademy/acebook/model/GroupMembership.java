@@ -15,6 +15,7 @@ public class GroupMembership {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Getters and setters
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
