@@ -1,18 +1,14 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <title>Groups Dashboard</title>
+    <meta charset="UTF-8">
+    <title>Your Groups Dashboard</title>
 </head>
 <body>
 <h1>Your Groups</h1>
 
-<!-- Create Group Form -->
-<form action="#" th:action="@{/groups}" method="post">
-    <input type="text" name="name" placeholder="Group name" required>
-    <button type="submit">Create Group</button>
-</form>
+<p><a th:href="@{/groups/create}">Create a New Circle</a></p>
 
-<!-- Existing Groups -->
 <div th:if="${#lists.isEmpty(groups)}">
     <p>You don’t have any groups yet. Create one above!</p>
 </div>
