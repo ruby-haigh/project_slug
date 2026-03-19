@@ -4,52 +4,85 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Project Slug</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link th:href="main.css" rel="stylesheet">
 </head>
+
 <body>
+
+<!-- Navbar -->
 <div th:replace="fragments/navbar :: navbar"></div>
+
 <div class="container mt-5">
+
+    <!-- Header -->
     <h1 class="text-center mb-2">Monthly Moments</h1>
-    <p class="text-center text-muted mb-4">Monthly updates from the people you care about</p>
+    <p class="text-center text-muted mb-4">
+        Monthly updates from the people you care about
+    </p>
 
-    <div class="scrapbook-row">
+    <div th:if="${#lists.isEmpty(groups)}" class="text-center mt-5">
+        <p class="text-muted">You're not in any circles yet 💌</p>
 
-        <div class="circle-card" style="--rotation: -2deg;">
-            <img src="/images/sad_slug.png" class="rounded-img mx-auto d-block" alt="Group 1">
-            <h5 class="text-center">Placeholder1</h5>
-            <p class="text-center text-muted">x members</p>
-            <span class="badge bg-success">March Issue Ready</span>
+        <div class="d-flex justify-content-center gap-3 mt-4 flex-wrap">
+            <a href="/groups" class="btn btn-primary">+ Create New Circle</a>
+            <a href="/circles/join" class="btn btn-outline-secondary">Join via Invite Link</a>
+        </div>
+    </div>
+
+    <!-- group preview -->
+    <div th:if="${!#lists.isEmpty(groups)}">
+
+        <div class="scrapbook-row">
+
+            <div class="circle-card"
+                 th:each="group, iterStat : ${groups}"
+                 th:if="${iterStat.index < 3}"
+                 th:style="'--rotation:' + (${iterStat.index % 2 == 0} ? '-1.5deg' : '1.5deg')">
+
+                <img src="/images/sad_slug.png" class="rounded-img mx-auto d-block" alt="Group">
+
+                <h5 class="text-center" th:text="${group.name}">Group Name</h5>
+
+                <p class="text-center text-muted">Members</p>
+
+                <span class="badge bg-secondary">Monthly Circle</span>
+            </div>
+
         </div>
 
-        <div class="card" style="--rotation: 3deg;">
-            <img src="/images/sad_slug.png" class="rounded-img mx-auto d-block" alt="Group 2">
-            <h5 class="text-center">Placeholder2</h5>
-            <p class="text-center text-muted">y members</p>
-            <span class="badge bg-success">March Issue Ready</span>
+        <!-- view all button -->
+        <div class="text-center mt-4">
+            <a href="/groups" class="btn btn-outline-primary">
+                View All Circles
+            </a>
         </div>
 
-        <div class="circle-card" style="--rotation: -1deg;">
-            <img src="/images/sad_slug.png" class="rounded-img mx-auto d-block" alt="Group 3">
-            <h5 class="text-center">Placeholder3</h5>
-            <p class="text-center text-muted">z members</p>
-            <span class="badge bg-secondary">Next issue in 5 days</span>
+        <!-- action buttons -->
+        <div class="d-flex justify-content-center gap-3 mt-4 mb-5 flex-wrap">
+            <a href="/groups" class="btn btn-primary">+ Create New Circle</a>
+            <a href="/circles/join" class="btn btn-outline-secondary">Join via Invite Link</a>
         </div>
 
     </div>
 
-    <div class="d-flex justify-content-center gap-3 mt-5 mb-5 flex-wrap">
-        <a href="/groups" class="btn btn-primary">+ Create New Circle</a>
-        <a href="/circles/join" class="btn btn-outline-secondary">Join via Invite Link</a>
-    </div>
+    <div class="card text-center p-4 mx-auto"
+         style="max-width: 700px; background: #fffdf6; border-radius: 15px; box-shadow: 0 8px 15px rgba(0,0,0,0.1);">
 
-    <div class="card text-center p-4 mx-auto" style="max-width: 700px; background: #fffdf6; border-radius: 15px; box-shadow: 0 8px 15px rgba(0,0,0,0.1);">
         <h5>How It Works</h5>
-        <p class="text-muted">Each month, everyone in your circle receives an email with 4 prompts. After 7 days, all responses are compiled into a magazine-style issue that captures your group's monthly moments.</p>
+
+        <p class="text-muted">
+            Each month, everyone in your circle receives an email with 4 prompts.
+            After 7 days, all responses are compiled into a magazine-style issue
+            that captures your group's monthly moments.
+        </p>
+
     </div>
 
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
