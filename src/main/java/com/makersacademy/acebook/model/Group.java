@@ -14,14 +14,13 @@ public class Group {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String frequency = "MONTHLY";
+    private String frequency;
 
     @OneToMany(mappedBy = "group")
     private List<GroupMembership> members;
 
-    public Group(String name) {
+    public Group(String name, String frequency) {
         this.name = name;
-        this.frequency = "MONTHLY";
+        this.frequency = frequency;
     }
-
 }
