@@ -27,12 +27,19 @@
                 <p class="scrapbook-card-meta">something lovely to build together</p>
 
                 <div class="mb-3">
-                    <span class="scrapbook-pill scrapbook-pill-green">✦ Start a monthly circle</span>
+                    <span class="scrapbook-pill scrapbook-pill-green">✦ Start a new circle</span>
                 </div>
 
                 <form th:action="@{/groups/create}" method="post" class="scrapbook-form mt-2">
                     <label class="scrapbook-label" for="circle-name">Circle name</label>
                     <input id="circle-name" type="text" name="name" placeholder="Family, Uni Friends, Book Club..." class="scrapbook-input" required>
+
+                    <label class="scrapbook-label" for="circle-frequency">Updates frequency</label>
+                    <select id="circle-frequency" name="frequency" class="scrapbook-input">
+                        <option value="" disabled selected>Select update frequency</option>
+                        <option value="MONTHLY">Monthly</option>
+                        <option value="FORTNIGHTLY">Fortnightly</option>
+                    </select>
                     <button type="submit" class="scrapbook-pill scrapbook-pill-peach scrapbook-button mt-3">＋ Create Circle</button>
                 </form>
 
