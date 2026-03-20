@@ -17,16 +17,6 @@
                      aria-expanded="false">
                 <ul class="dropdown-menu dropdown-menu-end">
                     <li><a class="dropdown-item" th:href="@{/users/{id}(id=${loggedInUser?.id})}">My Account</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li>
-                        <form th:action="@{/users/{id}/delete(id=${loggedInUser?.id})}" method="post" class="m-0">
-                            <li>
-                                <button type="button" class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
-                                    Delete Account
-                                </button>
-                            </li>
-                        </form>
-                    </li>
                 </ul>
             </div>
         </div>
