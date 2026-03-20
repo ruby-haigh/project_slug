@@ -5,6 +5,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+import java.util.List;
+
 @Data
 @Entity
 @NoArgsConstructor
@@ -18,6 +20,9 @@ public class Group {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "group")
+    private List<GroupMembership> members;
 
     public Group(String name) {
         this.name = name;

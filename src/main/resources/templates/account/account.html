@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link th:href="@{/main.css}" rel="stylesheet">
 </head>
 <body>
@@ -13,16 +14,28 @@
 <div class="container mt-5" style="max-width: 620px;">
 
     <h2 class="fw-bold mb-1">My Account</h2>
-    <p class="text-muted mb-4" th:text="${user.email}"></p>
+    <p id="user-email" class="text-muted mb-4" th:text="${user.email}"></p>
 
     <!--profile info -->
     <div class="card border-0 shadow-sm mb-4">
         <div class="card-body px-4 py-3">
             <h6 class="text-uppercase text-muted fw-semibold small mb-3">Profile</h6>
 
-            <div th:if="${user.profilePictureUrl != null}" class="mb-3 text-center">
-                <img th:src="${user.profilePictureUrl}" alt="Profile picture"
-                     class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover;">
+            <!--profile pic-->
+            <div class="mb-3 text-center" style="position: relative; display: inline-block;">
+                <label for="profilePicInput" style="cursor: pointer;">
+                    <img th:src="${user.profilePictureUrl} ?: 'https://ui-avatars.com/api/?name=' + ${user.email?.substring(0,1)} + '&background=random&rounded=true&size=80'"
+                         alt="Profile picture"
+                         class="rounded-circle"
+                         style="width: 80px; height: 80px; object-fit: cover;">
+                    <div style="position: absolute; bottom: 0; right: 0; background: #198754; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border: 2px solid white;">
+                        <i class="bi bi-camera-fill text-white" style="font-size: 13px;"></i>
+                    </div>
+                </label>
+                <form id="profilePicForm" action="/users/profile-picture" method="post" enctype="multipart/form-data">
+                    <input type="file" id="profilePicInput" name="file" accept="image/*" style="display: none;"
+                           onchange="document.getElementById('profilePicForm').submit()">
+                </form>
             </div>
 
             <div class="mb-2">
@@ -38,18 +51,6 @@
         </div>
     </div>
 
-    <!--profile pic -->
-    <div class="card border-0 shadow-sm mb-4">
-        <div class="card-body px-4 py-3">
-            <h6 class="text-uppercase text-muted fw-semibold small mb-3">Profile Picture</h6>
-            <form action="/users/profile-picture" method="post" enctype="multipart/form-data">
-                <div class="mb-3">
-                    <input type="file" name="file" accept="image/*" class="form-control">
-                </div>
-                <button type="submit" class="btn btn-primary btn-sm">Upload Photo</button>
-            </form>
-        </div>
-    </div>
 
     <a href="/" class="btn btn-outline-secondary btn-sm">Back to Home</a>
 

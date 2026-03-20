@@ -17,6 +17,7 @@ public class SignUpTest {
     @BeforeEach
     public void setup() {
         driver = new ChromeDriver();
+        driver.manage().deleteAllCookies();
         faker = new Faker();
     }
 
@@ -34,7 +35,10 @@ public class SignUpTest {
         driver.findElement(By.name("email")).sendKeys(email);
         driver.findElement(By.name("password")).sendKeys("P@55qw0rd");
         driver.findElement(By.name("action")).click();
-        String userEmail = driver.findElement(By.id("account-link")).getText();
+        driver.findElement(By.id("profile-pic-dropdown")).click();
+        driver.findElement(By.linkText("My Account")).click();
+
+        String userEmail = driver.findElement(By.id("user-email")).getText();
         assertEquals(email, userEmail);
     }
 }
