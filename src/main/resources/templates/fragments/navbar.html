@@ -4,9 +4,24 @@
             <img src="/images/snailmail_logo.png" alt="Snail Mail" class="navbar-logo">
         </a>
         <div class="d-flex gap-3 align-items-center">
+            <span class="tape tape-1"></span>
+            <span class="tape tape-2"></span>
+            <span class="tape tape-3"></span>
             <a href="/groups" class="nav-link">Circles</a>
-            <a href="/groups/create" id="create-circle-link" class="nav-link">Create Circle</a>
-            <a class="nav-link" id="account-link" th:href="'/users/' + ${loggedInUser?.getId()}" ><span class="text-muted small" th:text="${loggedInUser?.email}"></span></a>
+            <a href="/groups/create" class="nav-link">Create Circle</a>
+
+            <!--account dropdown-->
+            <div class="dropdown">
+                <img th:src="${loggedInUser?.profilePictureUrl} ?: 'https://ui-avatars.com/api/?name=' + ${loggedInUser?.email?.substring(0,1)} + '&background=random&rounded=true&size=36'"
+                     alt="Profile"
+                     class="rounded-circle"
+                     data-bs-toggle="dropdown"
+                     style="width: 36px; height: 36px; object-fit: cover; cursor: pointer;"
+                     aria-expanded="false">
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" th:href="@{/users/{id}(id=${loggedInUser?.id})}">My Account</a></li>
+                </ul>
+            </div>
         </div>
     </div>
 </nav>
