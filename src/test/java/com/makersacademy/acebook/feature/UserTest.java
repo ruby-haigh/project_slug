@@ -23,6 +23,7 @@ public class UserTest {
     @BeforeEach
     public void login() {
         driver = new ChromeDriver();
+        driver.manage().deleteAllCookies();
         faker = new Faker();
         String email = faker.name().username() + "@email.com";
         driver.get("http://localhost:8081/");

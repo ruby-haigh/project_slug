@@ -17,6 +17,7 @@ public class SignUpTest {
     @BeforeEach
     public void setup() {
         driver = new ChromeDriver();
+        driver.manage().deleteAllCookies();
         faker = new Faker();
     }
 
