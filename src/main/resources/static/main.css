@@ -249,11 +249,12 @@ h6 {
     color: var(--color-text-primary);
     text-decoration: none;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transform-origin: center;
 }
 
 .home-cta-pill:hover {
     color: var(--color-text-primary);
-    transform: translateY(-2px);
+    transform: translateY(-2px) scale(1.04);
     box-shadow: 0 12px 22px rgba(95, 87, 78, 0.12);
 }
 
@@ -388,6 +389,19 @@ h6 {
     text-align: center;
 }
 
+@keyframes sparkle-twinkle {
+    0%,
+    100% {
+        transform: rotate(10deg) scale(1);
+        opacity: 0.78;
+    }
+
+    50% {
+        transform: rotate(16deg) scale(1.16);
+        opacity: 1;
+    }
+}
+
 .scrapbook-illustration {
     position: relative;
     width: 165px;
@@ -409,6 +423,7 @@ h6 {
     color: rgba(122, 155, 142, 0.88);
     font-family: var(--font-handwritten);
     transform: rotate(10deg);
+    animation: sparkle-twinkle 2.4s ease-in-out infinite;
 }
 
 .scrapbook-icon {
@@ -496,11 +511,23 @@ h6 {
     box-shadow: 0 0 0 3px rgba(122, 155, 142, 0.12);
 }
 
+.scrapbook-textarea {
+    min-height: 132px;
+    resize: vertical;
+}
+
 .scrapbook-button {
     width: 100%;
     border: none;
     text-decoration: none;
     cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transform-origin: center;
+}
+
+.scrapbook-button:hover {
+    transform: rotate(var(--pill-rotation, -3deg)) scale(1.04);
+    box-shadow: 0 12px 22px rgba(95, 87, 78, 0.12);
 }
 
 .scrapbook-link {
@@ -522,6 +549,13 @@ h6 {
     width: 100%;
     justify-content: center;
     text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transform-origin: center;
+}
+
+.scrapbook-link-button:hover {
+    transform: rotate(var(--pill-rotation, -3deg)) scale(1.04);
+    box-shadow: 0 12px 22px rgba(95, 87, 78, 0.12);
 }
 
 .scrapbook-message {
@@ -746,7 +780,6 @@ h6 {
 
 .home-step-pill:hover {
     color: var(--color-text-primary);
-    transform: translateY(-2px);
 }
 
 .home-step-pill-blue {
@@ -836,6 +869,14 @@ h6 {
     color: rgba(122, 155, 142, 0.88);
     font-family: var(--font-handwritten);
     transform: rotate(10deg);
+    animation: sparkle-twinkle 2.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .scrapbook-illustration::after,
+    .home-card-illustration::after {
+        animation: none;
+    }
 }
 
 .home-card-icon {

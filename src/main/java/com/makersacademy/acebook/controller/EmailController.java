@@ -1,6 +1,8 @@
 package com.makersacademy.acebook.controller;
 
+import com.makersacademy.acebook.service.MonthlyPromptEmailService;
 import com.makersacademy.acebook.service.EmailService;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -8,9 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class EmailController {
 
     private final EmailService emailService;
+    private final MonthlyPromptEmailService monthlyPromptEmailService;
 
-    public EmailController(EmailService emailService) {
+    public EmailController(EmailService emailService, MonthlyPromptEmailService monthlyPromptEmailService) {
         this.emailService = emailService;
+        this.monthlyPromptEmailService = monthlyPromptEmailService;
     }
 
     @GetMapping("/send-test-email")
@@ -28,5 +32,11 @@ public class EmailController {
         );
 
         return "Email sent!";
+    }
+
+    @GetMapping("/groups/{groupId}/send-prompt-email")
+    public String sendPromptEmailForGroup(@PathVariable Long groupId) {
+        int recipients = monthlyPromptEmailService.sendPromptEmailsForGroup(groupId);
+        return "Prompt emails sent to " + recipients + " group member(s).";
     }
 }

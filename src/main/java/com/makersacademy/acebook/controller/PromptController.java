@@ -12,12 +12,18 @@ import com.makersacademy.acebook.repository.GroupRepository;
 import com.makersacademy.acebook.repository.GroupResponseRepository;
 import com.makersacademy.acebook.repository.PromptRepository;
 import com.makersacademy.acebook.repository.UserRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -26,6 +32,7 @@ import java.util.Optional;
 
 @Controller
 public class PromptController {
+    public static final String PENDING_PROMPT_LINK_SESSION_KEY = "pendingPromptLink";
 
     @Autowired
     private PromptRepository promptRepository;
@@ -39,20 +46,26 @@ public class PromptController {
     @Autowired
     private GroupCyclePromptRepository groupCyclePromptRepository;
 
-    // new: repo for saving responses
     @Autowired
     private GroupResponseRepository groupResponseRepository;
 
-    // new: needed to get logged in user
     @Autowired
     private UserRepository userRepository;
 
+    @GetMapping("/groups/{groupId}/prompts/open")
+    public String openPromptFormFromEmail(@PathVariable Long groupId, HttpSession session) {
+        String promptFormPath = "/groups/" + groupId + "/prompts";
+
+        if (getCurrentUser().isEmpty()) {
+            session.setAttribute(PENDING_PROMPT_LINK_SESSION_KEY, promptFormPath);
+            return "redirect:/oauth2/authorization/okta";
+        }
+
+        return "redirect:" + promptFormPath;
+    }
+
     @GetMapping("/groups/{groupId}/prompts")
     public String showPromptForm(@PathVariable Long groupId, Model model) {
-
-        System.out.println("PROMPT ROUTE HIT for group " + groupId);
-
-        // First make sure the group actually exists
         Optional<Group> optionalGroup = groupRepository.findById(groupId);
         if (optionalGroup.isEmpty()) {
             return "redirect:/groups";
@@ -60,31 +73,28 @@ public class PromptController {
 
         Group group = optionalGroup.get();
 
-        // Find the current active cycle for this group using the current time
         LocalDateTime now = LocalDateTime.now();
         Optional<GroupCycle> optionalCycle = groupCycleRepository.findCurrentCycleByGroupId(groupId, now);
 
         GroupCycle currentCycle;
-
-        // If no cycle exists yet, create a simple default cycle for 30 days
         if (optionalCycle.isEmpty()) {
-            currentCycle = new GroupCycle(
-                    groupId,
-                    now,
-                    now.plusDays(30)
-            );
+            currentCycle = new GroupCycle(groupId, now, now.plusDays(30));
             currentCycle = groupCycleRepository.save(currentCycle);
         } else {
             currentCycle = optionalCycle.get();
         }
 
-        // Check whether prompts have already been assigned to this cycle
+        User dbUser = getCurrentUser().orElseThrow();
+        Long userId = dbUser.getId();
+
+        boolean alreadySubmitted =
+                groupResponseRepository.existsByGroupCycleIdAndUserId(currentCycle.getId(), userId);
+
         List<GroupCyclePrompt> cyclePromptLinks =
                 groupCyclePromptRepository.findByGroupCycleId(currentCycle.getId());
 
         List<Prompt> promptsForForm = new ArrayList<>();
 
-        // If no prompts exist yet for this cycle, randomise and save them
         if (cyclePromptLinks.isEmpty()) {
             List<Prompt> randomPrompts = promptRepository.findRandomPrompts();
 
@@ -94,24 +104,20 @@ public class PromptController {
                 promptsForForm.add(prompt);
             }
         } else {
-            // If prompts already exist for this cycle, load those exact prompts
             for (GroupCyclePrompt link : cyclePromptLinks) {
                 promptRepository.findById(link.getPromptId()).ifPresent(promptsForForm::add);
             }
         }
 
-        // Send data to the HTML page
         model.addAttribute("group", group);
         model.addAttribute("groupId", groupId);
         model.addAttribute("groupCycleId", currentCycle.getId());
         model.addAttribute("prompts", promptsForForm);
+        model.addAttribute("alreadySubmitted", alreadySubmitted);
 
         return "prompts/form";
     }
 
-    // =========================
-    // POST: handle form submit
-    // =========================
     @PostMapping("/groups/{groupId}/prompts")
     public String submitPromptForm(
             @PathVariable Long groupId,
@@ -119,34 +125,20 @@ public class PromptController {
             @RequestParam List<Long> promptIds,
             @RequestParam List<String> responseTexts
     ) {
-
-        // get logged in user from auth0
-        DefaultOidcUser user = (DefaultOidcUser) SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getPrincipal();
-
-        String email = user.getEmail();
-
-        // find user in DB
-        User dbUser = userRepository.findUserByEmail(email).orElseThrow();
+        User dbUser = getCurrentUser().orElseThrow();
         Long userId = dbUser.getId();
 
-        // check if user already submitted this cycle (prevent duplicates)
         boolean alreadySubmitted =
                 groupResponseRepository.existsByGroupCycleIdAndUserId(groupCycleId, userId);
 
         if (alreadySubmitted) {
-            return "redirect:/groups/" + groupId;
+            return "redirect:/groups/" + groupId + "/prompts";
         }
 
-        // loop through prompts + responses and save each one
         for (int i = 0; i < promptIds.size(); i++) {
-
             Long promptId = promptIds.get(i);
             String responseText = responseTexts.get(i);
 
-            // skip empty answers
             if (responseText == null || responseText.trim().isEmpty()) {
                 continue;
             }
@@ -162,7 +154,20 @@ public class PromptController {
             groupResponseRepository.save(response);
         }
 
-        // redirect back to group page after submit
-        return "redirect:/groups/" + groupId;
+        return "redirect:/groups/" + groupId + "/prompts";
+    }
+
+    private Optional<User> getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+            return Optional.empty();
+        }
+
+        Object principal = authentication.getPrincipal();
+        if (!(principal instanceof DefaultOidcUser oidcUser)) {
+            return Optional.empty();
+        }
+
+        return userRepository.findUserByEmail(oidcUser.getEmail());
     }
 }
