@@ -29,4 +29,11 @@ public class Group {
         this.frequency = frequency;
     }
 
+    @PrePersist
+    void setCreatedAt() {
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
+    }
+
 }
