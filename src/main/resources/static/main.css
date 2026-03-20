@@ -986,3 +986,166 @@ h6 {
     transform: rotate(4deg);
     width: 50px;
 }
+
+
+/* Disabled group cards */
+.disabled-card {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: rotate(var(--rotation)) !important;
+}
+
+.disabled-card:hover {
+    transform: rotate(var(--rotation)) !important;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+}
+
+
+/* Feed */
+.feed-info-card {
+    position: relative;
+    max-width: 900px;
+    margin-top: 5rem;
+    padding: 3.5rem 2.5rem 2.5rem;
+    overflow: hidden;
+
+    background:
+            radial-gradient(circle at top center, rgba(243, 215, 191, 0.16), transparent 32%),
+            linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.9));
+
+    border: 2px solid rgba(122, 155, 142, 0.18);
+    border-radius: 28px;
+
+    box-shadow: 0 18px 36px rgba(95, 87, 78, 0.14);
+}
+
+/* decorative shapes */
+.feed-info-card::before,
+.feed-info-card::after {
+    content: "";
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    background: rgba(155, 181, 193, 0.18);
+    pointer-events: none;
+}
+
+.feed-info-card::before {
+    top: -20px;
+    left: -60px;
+    border-top-left-radius: 28px;
+    border-bottom-right-radius: 140px;
+}
+
+.feed-info-card::after {
+    right: -70px;
+    bottom: -20px;
+    border-top-left-radius: 140px;
+    border-bottom-right-radius: 28px;
+}
+
+/* inner content */
+.feed-info-inner {
+    position: relative;
+    z-index: 1;
+}
+
+.feed-info-title {
+    font-family: var(--font-handwritten);
+    font-size: 2rem;
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+}
+
+.feed-info-text {
+    font-size: 1.1rem;
+    color: rgba(58, 58, 58, 0.65);
+    line-height: 1.5;
+}
+
+/* doodles */
+.feed-info-doodle {
+    position: absolute;
+    font-family: var(--font-handwritten);
+    pointer-events: none;
+}
+
+.feed-info-doodle-heart {
+    top: 30px;
+    right: 40px;
+    font-size: 3rem;
+    color: rgba(212, 165, 165, 0.3);
+    transform: rotate(-10deg);
+}
+
+.feed-info-doodle-star {
+    left: 40px;
+    bottom: 40px;
+    font-size: 2.8rem;
+    color: rgba(122, 155, 142, 0.25);
+    transform: rotate(-12deg);
+}
+
+/* pills */
+.feed-info-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+}
+
+.feed-step-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    background: #f4f4f4;
+}
+
+.feed-step-pill-blue { background: #e3f0ff; }
+.feed-step-pill-peach { background: #ffe9e0; }
+.feed-step-pill-pink { background: #fbe4ef; }
+
+/* Feed card style */
+
+.feed-card::before,
+.feed-card::after {
+    content: '';
+    position: absolute;
+    width: 60px;
+    height: 18px;
+    background: rgba(245, 222, 179, 0.55);
+    backdrop-filter: blur(1px);
+    border-left: 1px solid rgba(255,255,255,0.4);
+    border-right: 1px solid rgba(255,255,255,0.4);
+    z-index: 10;
+    pointer-events: none;
+}
+
+.feed-card {
+    position: relative;
+    background: #fffdf6;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    padding: 20px;
+    margin-bottom: 2rem;
+}
+
+.feed-card:hover {
+    transform: rotate(0deg) scale(1.05);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+}
+
+.tape-top-left::before { top: -10px; left: 10px; transform: rotate(-6deg); }
+.tape-bottom-right::after { bottom: -10px; right: 10px; transform: rotate(8deg); }
+.tape-top-right::before { top: -10px; right: 15px; transform: rotate(5deg); }
+.tape-bottom-left::after { bottom: -10px; left: 15px; transform: rotate(-8deg); }
+
+
+.card-tilt-1 { transform: rotate(-2deg); border-radius: 16px; }
+.card-tilt-2 { transform: rotate(1.5deg); border-radius: 24px; }
+.card-tilt-3 { transform: rotate(-1deg); border-radius: 12px; }
+.card-tilt-4 { transform: rotate(2deg); border-radius: 20px; }

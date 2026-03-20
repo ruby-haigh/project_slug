@@ -38,7 +38,9 @@
 
         <div class="scrapbook-row">
             <th:block th:each="group, iterStat : ${groups}" th:if="${iterStat.index < 3}">
-                <div class="circle-card home-card home-card-family card-tilt-left" th:if="${iterStat.index == 0}">
+                <div class="circle-card home-card home-card-family card-tilt-left" th:if="${iterStat.index == 0}"
+                     th:classappend="${!hasFeedMap[group.id]} ? ' disabled-card'"
+                     th:onclick="${hasFeedMap[group.id]} ? 'window.location.href=\'/feed/' + ${group.id} + '\''">
                     <div class="home-card-body text-center">
                         <div class="home-card-illustration">
                             <div class="home-card-icon">☺</div>
@@ -56,7 +58,9 @@
                     </div>
                 </div>
 
-                <div class="circle-card home-card home-card-friends card-tilt-right" th:if="${iterStat.index == 1}">
+                <div class="circle-card home-card home-card-friends card-tilt-right" th:if="${iterStat.index == 1}"
+                     th:classappend="${!hasFeedMap[group.id]} ? ' disabled-card'"
+                     th:onclick="${hasFeedMap[group.id]} ? 'window.location.href=\'/feed/' + ${group.id} + '\''">
                     <div class="home-card-body text-center">
                         <div class="home-card-illustration">
                             <div class="home-card-icon">✧</div>
@@ -74,7 +78,9 @@
                     </div>
                 </div>
 
-                <div class="circle-card home-card home-card-work card-tilt-left" th:if="${iterStat.index == 2}">
+                <div class="circle-card home-card home-card-work card-tilt-left" th:if="${iterStat.index == 2}"
+                     th:classappend="${!hasFeedMap[group.id]} ? ' disabled-card'"
+                     th:onclick="${hasFeedMap[group.id]} ? 'window.location.href=\'/feed/' + ${group.id} + '\''">
                     <div class="home-card-body text-center">
                         <div class="home-card-illustration">
                             <div class="home-card-icon">✉</div>

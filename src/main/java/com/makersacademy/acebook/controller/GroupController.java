@@ -5,6 +5,7 @@ import com.makersacademy.acebook.model.GroupMembership;
 import com.makersacademy.acebook.model.User;
 import com.makersacademy.acebook.repository.GroupMembershipRepository;
 import com.makersacademy.acebook.repository.GroupRepository;
+import com.makersacademy.acebook.repository.GroupResponseRepository;
 import com.makersacademy.acebook.repository.UserRepository;
 import com.makersacademy.acebook.service.EmailService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,11 +16,14 @@ import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/groups")
@@ -38,6 +42,9 @@ public class GroupController {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private GroupResponseRepository groupResponseRepository;
+
     private User getCurrentUser() {
         DefaultOidcUser principal = (DefaultOidcUser) SecurityContextHolder
                 .getContext()
@@ -49,12 +56,19 @@ public class GroupController {
 
     // Dashboard page
     @GetMapping
-    public String getGroupsPage(Model model) {
+    public ModelAndView getGroupsPage(Model model) {
+        ModelAndView mav = new ModelAndView("groups");
         User user = getCurrentUser();
         List<Group> groups = membershipRepository.findGroupsByUser(user);
         if (groups == null) groups = List.of();
-        model.addAttribute("groups", groups);
-        return "groups";
+        mav.addObject("groups", groups);
+        Map<Long, Boolean> hasFeedMap = new HashMap<>();
+        for (Group group : groups) {
+            boolean hasFeed = groupResponseRepository.existsByGroupId(group.getId());
+            hasFeedMap.put(group.getId(), hasFeed);
+        }
+        mav.addObject("hasFeedMap", hasFeedMap);
+        return mav;
     }
     //create group
 
