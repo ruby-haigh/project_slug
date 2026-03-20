@@ -7,18 +7,24 @@ import com.makersacademy.acebook.repository.GroupMembershipRepository;
 import com.makersacademy.acebook.repository.GroupRepository;
 import com.makersacademy.acebook.repository.UserRepository;
 import com.makersacademy.acebook.service.EmailService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Controller
 @RequestMapping("/groups")
 public class GroupController {
+    public static final String PENDING_INVITE_LINK_SESSION_KEY = "pendingInviteLink";
 
     @Autowired
     private GroupRepository groupRepository;
@@ -50,11 +56,13 @@ public class GroupController {
         model.addAttribute("groups", groups);
         return "groups";
     }
+    //create group
 
-    // Separate "Create Circle" page
     @GetMapping("/create")
-    public String getCreateCirclePage() {
-        return "create-circle"; // new Thymeleaf template
+    public String getCreateCirclePage(Model model) {
+        User loggedInUser = getCurrentUser();
+        model.addAttribute("loggedInUser", loggedInUser);
+        return "create-circle";
     }
 
     @PostMapping("/create")
@@ -81,39 +89,33 @@ public class GroupController {
 
     // Invite a user
     @PostMapping("/{groupId}/invite")
-    public String inviteUser(@PathVariable Long groupId, @RequestParam String email) {
-        User user = userRepository
-                .findUserByEmail(email)
-                .orElseGet(() -> userRepository.save(new User(email, "", "")));
-
+    public String inviteUser(@PathVariable Long groupId, @RequestParam String email, HttpServletRequest request) {
         Group group = groupRepository.findById(groupId).orElseThrow();
 
-        boolean alreadyMember = membershipRepository.findByUserAndGroup(user, group).isPresent();
-        if (!alreadyMember) {
-            GroupMembership membership = new GroupMembership(user, group);
-            membershipRepository.save(membership);
-        }
-
-        String inviteLink = "http://localhost:8080/groups/" + group.getId() + "/join?email=" + email;
+        String inviteLink = ServletUriComponentsBuilder.fromRequestUri(request)
+                .replacePath("/groups/" + group.getId() + "/join")
+                .replaceQueryParam("email", email)
+                .build()
+                .toUriString();
         emailService.sendInvite(email, group.getName(), inviteLink);
 
         return "redirect:/groups";
     }
 
     @GetMapping("/{groupId}/join")
-    public String joinGroup(@PathVariable Long groupId, @RequestParam String email) {
-        User user = userRepository
-                .findUserByEmail(email)
-                .orElseGet(() -> userRepository.save(new User(email, "", "")));
+    public String joinGroup(@PathVariable Long groupId,
+                            @RequestParam(required = false) String email,
+                            HttpServletRequest request,
+                            HttpSession session) {
+        groupRepository.findById(groupId).orElseThrow();
 
-        Group group = groupRepository.findById(groupId).orElseThrow();
+        String inviteLink = ServletUriComponentsBuilder.fromRequest(request)
+                .replaceQueryParam("email", email)
+                .build()
+                .toUriString();
 
-        boolean alreadyMember = membershipRepository.findByUserAndGroup(user, group).isPresent();
-        if (!alreadyMember) {
-            GroupMembership membership = new GroupMembership(user, group);
-            membershipRepository.save(membership);
-        }
+        session.setAttribute(PENDING_INVITE_LINK_SESSION_KEY, inviteLink);
 
-        return "redirect:/groups";
+        return "redirect:/circles/join?inviteLink=" + URLEncoder.encode(inviteLink, StandardCharsets.UTF_8);
     }
 }
