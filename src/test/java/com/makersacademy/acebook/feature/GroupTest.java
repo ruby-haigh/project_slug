@@ -5,6 +5,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -13,9 +14,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class UserTest {
+public class GroupTest {
 
     WebDriver driver;
     Faker faker;
@@ -31,30 +32,23 @@ public class UserTest {
         driver.findElement(By.name("email")).sendKeys(email);
         driver.findElement(By.name("password")).sendKeys("P@55qw0rd");
         driver.findElement(By.name("action")).click();
-//        Navigate to account page
-        driver.findElement(By.id("profile-pic-dropdown")).click();
-        driver.findElement(By.linkText("My Account")).click();
     }
 
     @AfterEach
-    public void tearDown() {
+    public void teardown() {
         driver.close();
     }
 
     @Test
-    public void updateAccountDetails() {
-        driver.findElement(By.linkText("Edit Profile")).click();
-        driver.findElement(By.name("name")).sendKeys("example-name");
-        driver.findElement(By.name("bio")).sendKeys("example-bio");
-        driver.findElement(By.className("btn-primary")).click();
+    public void createNewGroup() {
+        driver.findElement(By.linkText("Create Circle")).click();
+        driver.findElement(By.name("name")).sendKeys("example-group");
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement body = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(By.tagName("body"))
-        );
+        WebElement newGroupButton = driver.findElement(By.className("scrapbook-button"));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", newGroupButton);
 
-        assertTrue(body.getText().contains("example-name"));
-        assertTrue(body.getText().contains("example-bio"));
+        String groupName = (driver.findElement(By.className("scrapbook-card-title"))).getText();
+
+        assertEquals("example-group", groupName);
     }
-
 }
