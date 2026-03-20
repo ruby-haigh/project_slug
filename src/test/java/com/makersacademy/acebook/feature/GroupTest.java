@@ -41,7 +41,7 @@ public class GroupTest {
 
     @Test
     public void createNewGroup() {
-        driver.findElement(By.id("create-circle-link")).click();
+        driver.findElement(By.linkText("Create Circle")).click();
         driver.findElement(By.name("name")).sendKeys("example-group");
 
         WebElement newGroupButton = driver.findElement(By.className("scrapbook-button"));

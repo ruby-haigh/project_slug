@@ -32,8 +32,8 @@ public class UserTest {
         driver.findElement(By.name("password")).sendKeys("P@55qw0rd");
         driver.findElement(By.name("action")).click();
 //        Navigate to account page
-        driver.findElement(By.id("account-link")).click();
-        driver.findElement(By.linkText("Edit Profile")).click();
+        driver.findElement(By.id("profile-pic-dropdown")).click();
+        driver.findElement(By.linkText("My Account")).click();
     }
 
     @AfterEach
@@ -43,6 +43,7 @@ public class UserTest {
 
     @Test
     public void updateAccountDetails() {
+        driver.findElement(By.linkText("Edit Profile")).click();
         driver.findElement(By.name("name")).sendKeys("example-name");
         driver.findElement(By.name("bio")).sendKeys("example-bio");
         driver.findElement(By.className("btn-primary")).click();
