@@ -7,9 +7,11 @@ import com.makersacademy.acebook.repository.GroupMembershipRepository;
 import com.makersacademy.acebook.repository.GroupRepository;
 import com.makersacademy.acebook.repository.UserRepository;
 import com.makersacademy.acebook.service.EmailService;
+import com.makersacademy.acebook.service.MonthlyPromptEmailService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Controller;
@@ -37,6 +39,12 @@ public class GroupController {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private MonthlyPromptEmailService monthlyPromptEmailService;
+
+    @Value("${app.base-url}")
+    private String appBaseUrl;
 
     private User getCurrentUser() {
         DefaultOidcUser principal = (DefaultOidcUser) SecurityContextHolder
@@ -78,6 +86,8 @@ public class GroupController {
         GroupMembership membership = new GroupMembership(user, group);
         membershipRepository.save(membership);
 
+        monthlyPromptEmailService.sendPromptEmailsForGroup(group.getId());
+
         return "redirect:/groups"; // back to dashboard
     }
 
@@ -96,11 +106,7 @@ public class GroupController {
     public String inviteUser(@PathVariable Long groupId, @RequestParam String email, HttpServletRequest request) {
         Group group = groupRepository.findById(groupId).orElseThrow();
 
-        String inviteLink = ServletUriComponentsBuilder.fromRequestUri(request)
-                .replacePath("/groups/" + group.getId() + "/join")
-                .replaceQueryParam("email", email)
-                .build()
-                .toUriString();
+        String inviteLink = appBaseUrl + "/groups/" + group.getId() + "/join?email=" + URLEncoder.encode(email, StandardCharsets.UTF_8);
         emailService.sendInvite(email, group.getName(), inviteLink);
 
         return "redirect:/groups";
