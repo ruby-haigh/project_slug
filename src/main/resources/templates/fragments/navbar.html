@@ -6,7 +6,7 @@
         <div class="d-flex gap-3 align-items-center">
             <a href="/groups" class="nav-link">Circles</a>
             <a href="/groups/create" class="nav-link">Create Circle</a>
-            <a class="nav-link" th:href="'/users/' + ${loggedInUser?.getId()}" ><span class="text-muted small" th:text="${loggedInUser?.email}"></span></a>
+            <a class="nav-link" id="account-link" th:href="'/users/' + ${loggedInUser?.getId()}" ><span class="text-muted small" th:text="${loggedInUser?.email}"></span></a>
         </div>
     </div>
 </nav>

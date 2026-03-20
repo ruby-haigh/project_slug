@@ -32,6 +32,7 @@ public class UserTest {
         driver.findElement(By.name("action")).click();
 //        Navigate to account page
         driver.findElement(By.id("account-link")).click();
+        driver.findElement(By.linkText("Edit Profile")).click();
     }
 
     @AfterEach
@@ -43,7 +44,7 @@ public class UserTest {
     public void updateAccountDetails() {
         driver.findElement(By.name("name")).sendKeys("example-name");
         driver.findElement(By.name("bio")).sendKeys("example-bio");
-        driver.findElement(By.id("submit-user-form")).click();
+        driver.findElement(By.className("btn-primary")).click();
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         WebElement body = wait.until(
