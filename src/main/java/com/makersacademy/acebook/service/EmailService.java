@@ -42,6 +42,28 @@ public class EmailService {
         }
     }
 
+    public void sendPromptFormEmail(String toEmail, String groupName, String promptFormLink) {
+        MimeMessage message = mailSender.createMimeMessage();
+
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            helper.setTo(toEmail);
+            helper.setSubject("Your monthly prompts for " + groupName);
+
+            String htmlMsg = "<p>Hi!</p>"
+                    + "<p>It’s time to fill in your monthly update for '<strong>" + groupName + "</strong>'.</p>"
+                    + "<p>Click <a href='" + promptFormLink + "'>here</a> to open your form.</p>"
+                    + "<p>You can also open the form from the app any time.</p>";
+
+            helper.setText(htmlMsg, true);
+            mailSender.send(message);
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
     // Send simple plain text email (general purpose)
     public void sendSimpleEmail(String[] to, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();

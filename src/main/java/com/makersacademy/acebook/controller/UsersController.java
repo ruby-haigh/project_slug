@@ -45,6 +45,13 @@ public class UsersController {
                     + URLEncoder.encode(pendingInviteLink, StandardCharsets.UTF_8));
         }
 
+        Object pendingPrompt = session.getAttribute(PromptController.PENDING_PROMPT_LINK_SESSION_KEY);
+
+        if (pendingPrompt instanceof String pendingPromptLink && !pendingPromptLink.isBlank()) {
+            session.removeAttribute(PromptController.PENDING_PROMPT_LINK_SESSION_KEY);
+            return new RedirectView(pendingPromptLink);
+        }
+
         return new RedirectView("/");
     }
 
