@@ -3,6 +3,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 import java.util.List;
 
 @Data
@@ -16,12 +18,22 @@ public class Group {
     private String name;
     private String frequency = "MONTHLY";
 
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
     @OneToMany(mappedBy = "group")
     private List<GroupMembership> members;
 
     public Group(String name) {
         this.name = name;
         this.frequency = "MONTHLY";
+    }
+
+    @PrePersist
+    void setCreatedAt() {
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
     }
 
 }

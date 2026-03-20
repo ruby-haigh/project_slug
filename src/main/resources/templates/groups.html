@@ -53,11 +53,11 @@
                         <span class="scrapbook-pill scrapbook-pill-peach">✦ Monthly circle</span>
                     </div>
 
-                    <form th:action="@{/groups/{id}/update(id=${group.id})}" method="post" class="scrapbook-form">
-                        <label class="scrapbook-label" th:for="'rename-' + ${group.id}">Rename circle</label>
-                        <input th:id="'rename-' + ${group.id}" type="text" name="name" placeholder="New name" class="scrapbook-input">
-                        <button type="submit" class="scrapbook-pill scrapbook-pill-blue scrapbook-button mt-3">✎ Rename</button>
-                    </form>
+                    <a th:href="@{/groups/{groupId}/prompts(groupId=${group.id})}"
+                       class="scrapbook-pill scrapbook-pill-green scrapbook-link-button mb-3">
+                        <span>✎</span>
+                        <span>Start update</span>
+                    </a>
 
                     <form th:action="@{/groups/{id}/invite(id=${group.id})}" method="post" class="scrapbook-form mt-3">
                         <label class="scrapbook-label" th:for="'invite-' + ${group.id}">Invite by email</label>
@@ -83,11 +83,11 @@
                         <span class="scrapbook-pill scrapbook-pill-blue pill-tilt-left">☰ Monthly circle</span>
                     </div>
 
-                    <form th:action="@{/groups/{id}/update(id=${group.id})}" method="post" class="scrapbook-form">
-                        <label class="scrapbook-label" th:for="'rename-' + ${group.id}">Rename circle</label>
-                        <input th:id="'rename-' + ${group.id}" type="text" name="name" placeholder="New name" class="scrapbook-input">
-                        <button type="submit" class="scrapbook-pill scrapbook-pill-peach scrapbook-button mt-3">✎ Rename</button>
-                    </form>
+                    <a th:href="@{/groups/{groupId}/prompts(groupId=${group.id})}"
+                       class="scrapbook-pill scrapbook-pill-green scrapbook-link-button mb-3">
+                        <span>✎</span>
+                        <span>Start update</span>
+                    </a>
 
                     <form th:action="@{/groups/{id}/invite(id=${group.id})}" method="post" class="scrapbook-form mt-3">
                         <label class="scrapbook-label" th:for="'invite-' + ${group.id}">Invite by email</label>
@@ -113,11 +113,11 @@
                         <span class="scrapbook-pill scrapbook-pill-pink">♡ Monthly circle</span>
                     </div>
 
-                    <form th:action="@{/groups/{id}/update(id=${group.id})}" method="post" class="scrapbook-form">
-                        <label class="scrapbook-label" th:for="'rename-' + ${group.id}">Rename circle</label>
-                        <input th:id="'rename-' + ${group.id}" type="text" name="name" placeholder="New name" class="scrapbook-input">
-                        <button type="submit" class="scrapbook-pill scrapbook-pill-blue scrapbook-button mt-3">✎ Rename</button>
-                    </form>
+                    <a th:href="@{/groups/{groupId}/prompts(groupId=${group.id})}"
+                       class="scrapbook-pill scrapbook-pill-green scrapbook-link-button mb-3">
+                        <span>✎</span>
+                        <span>Start update</span>
+                    </a>
 
                     <form th:action="@{/groups/{id}/invite(id=${group.id})}" method="post" class="scrapbook-form mt-3">
                         <label class="scrapbook-label" th:for="'invite-' + ${group.id}">Invite by email</label>
