@@ -144,6 +144,8 @@ h6 {
     z-index: 1000;
     width: 100%;
     box-sizing: border-box;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    transform: rotate(-0.3deg);
 }
 
 .navbar-inner {
@@ -953,4 +955,34 @@ h6 {
         bottom: 48px;
         font-size: 3.5rem;
     }
+}
+/* Tape styling */
+.tape {
+    position: absolute;
+    width: 60px;
+    height: 18px;
+    background: var(--color-accent);
+    opacity: 0.6;
+    border-radius: 2px;
+}
+
+/* Different positions + rotations */
+.tape-1 {
+    top: -8px;
+    left: 30px;
+    transform: rotate(-6deg);
+}
+
+.tape-2 {
+    top: -6px;
+    right: 60px;
+    transform: rotate(10deg);
+    width: 70px;
+}
+
+.tape-3 {
+    bottom: -8px;
+    left: 200px;
+    transform: rotate(4deg);
+    width: 50px;
 }
