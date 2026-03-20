@@ -54,7 +54,7 @@ public class EmailService {
             String htmlMsg = "<p>Hi!</p>"
                     + "<p>It’s time to fill in your monthly update for '<strong>" + groupName + "</strong>'.</p>"
                     + "<p>Click <a href='" + promptFormLink + "'>here</a> to open your form.</p>"
-                    + "<p>You can also open the form from the app any time.</p>";
+                    + "<p>You can also open the form from the app.</p>";
 
             helper.setText(htmlMsg, true);
             mailSender.send(message);

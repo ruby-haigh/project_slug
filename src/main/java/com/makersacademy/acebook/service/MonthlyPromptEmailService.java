@@ -27,7 +27,8 @@ public class MonthlyPromptEmailService {
     @Value("${app.base-url}")
     private String appBaseUrl;
 
-    @Scheduled(cron = "${prompt.email.cron:0 0 9 * * *}")
+    @Scheduled(cron = "${prompt.email.cron:0 0 9 * * *}") //the schedule is “when to check,” not automatically “when to send everyone an email.”
+    //second: 0, minute: 0, hour: 9, day of month: * = every day, month: * = every month, day of week: * = every day of week
     public void sendDuePromptEmails() {
         LocalDate today = LocalDate.now();
 
