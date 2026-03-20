@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Circle</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/main.css}" rel="stylesheet">
+</head>
+<body>
+
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div class="container scrapbook-shell mt-5">
+    <h1 class="text-center scrapbook-title">Join a Circle</h1>
+    <p class="text-center scrapbook-subtitle">Paste an invite link or open one from your email</p>
+
+    <div class="scrapbook-grid">
+        <div class="circle-card scrapbook-card scrapbook-card-blue card-tilt-right">
+            <div class="scrapbook-card-body">
+                <div class="scrapbook-illustration">
+                    <div class="scrapbook-icon">✉</div>
+                </div>
+
+                <h5 class="scrapbook-card-title">Join via Invite Link</h5>
+                <p class="scrapbook-card-meta"
+                   th:text="${inviteDetails != null and inviteDetails.valid} ? inviteDetails.groupName : 'bring your invite link here'">bring your invite link here</p>
+
+                <div th:if="${successMessage}" class="scrapbook-message scrapbook-message-success" th:text="${successMessage}">You joined the circle.</div>
+                <div th:if="${errorMessage}" class="scrapbook-message scrapbook-message-error" th:text="${errorMessage}">This invite was not valid.</div>
+
+                <div th:if="${inviteDetails != null and inviteDetails.valid}" class="mb-3">
+                    <span class="scrapbook-pill scrapbook-pill-blue pill-tilt-left">
+                        <span>✦</span>
+                        <span th:text="'Invite for ' + ${inviteDetails.groupName}">Invite for Circle</span>
+                    </span>
+                </div>
+
+                <form th:action="@{/circles/join}" method="post" class="scrapbook-form mt-2">
+                    <label class="scrapbook-label" for="invite-link">Invite link</label>
+                    <input id="invite-link" type="text" name="inviteLink" class="scrapbook-input" th:value="${inviteLink}" placeholder="Paste the invite link from your email" required>
+
+                    <div th:if="${loggedInUser != null and inviteDetails != null and inviteDetails.invitedEmail != null}" class="scrapbook-helper mt-3"
+                         th:text="'Signed in as ' + ${loggedInUser.email} + '. This invite was sent to ' + ${inviteDetails.invitedEmail} + '.'">
+                        Signed in as you@example.com.
+                    </div>
+
+                    <button th:if="${loggedInUser != null}" type="submit" class="scrapbook-pill scrapbook-pill-peach scrapbook-button mt-4">＋ Join Circle</button>
+
+                    <a th:if="${loggedInUser == null}" href="/oauth2/authorization/okta" class="scrapbook-pill scrapbook-pill-pink scrapbook-link-button mt-4">
+                        <span>→</span>
+                        <span>Sign in to Join</span>
+                    </a>
+                </form>
+
+                <div class="text-center mt-4">
+                    <a th:href="@{/groups}" class="scrapbook-link">
+                        <span>←</span>
+                        <span>Back to Circles</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

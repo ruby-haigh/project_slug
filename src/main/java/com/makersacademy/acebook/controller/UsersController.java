@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 import com.makersacademy.acebook.service.CloudinaryService;
 import org.springframework.web.multipart.MultipartFile;
+import jakarta.servlet.http.HttpSession;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 @Controller
@@ -24,7 +27,7 @@ public class UsersController {
     CloudinaryService cloudinaryService;
 
     @GetMapping("/users/after-login")
-    public RedirectView afterLogin() {
+    public RedirectView afterLogin(HttpSession session) {
         DefaultOidcUser principal = (DefaultOidcUser) SecurityContextHolder
                 .getContext()
                 .getAuthentication()
@@ -34,6 +37,13 @@ public class UsersController {
         userRepository
                 .findUserByEmail(email)
                 .orElseGet(() -> userRepository.save(new User(email, "", "")));
+
+        Object pendingInvite = session.getAttribute(GroupController.PENDING_INVITE_LINK_SESSION_KEY);
+
+        if (pendingInvite instanceof String pendingInviteLink && !pendingInviteLink.isBlank()) {
+            return new RedirectView("/circles/join?inviteLink="
+                    + URLEncoder.encode(pendingInviteLink, StandardCharsets.UTF_8));
+        }
 
         return new RedirectView("/");
     }
