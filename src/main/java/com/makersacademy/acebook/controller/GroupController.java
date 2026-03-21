@@ -74,8 +74,12 @@ public class GroupController {
     }
 
     @PostMapping("/create")
-    public String createGroup(@RequestParam String name) {
-        Group group = new Group(name);
+    public String createGroup(@RequestParam String name, @RequestParam(required = false) String frequency){
+        if (frequency == null) {
+            frequency = "MONTHLY";
+        }
+
+        Group group = new Group(name, frequency);
         groupRepository.save(group);
 
         User user = getCurrentUser();

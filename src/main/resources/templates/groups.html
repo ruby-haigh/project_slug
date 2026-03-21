@@ -48,7 +48,7 @@
                     <p class="scrapbook-card-meta">monthly circle</p>
 
                     <div class="mb-3">
-                        <span class="scrapbook-pill scrapbook-pill-peach">✦ Monthly circle</span>
+                        <span class="scrapbook-pill scrapbook-pill-peach" th:text="'✦ ' + ${group.frequency} + ' circle'"></span>
                     </div>
 
                     <a th:href="@{/groups/{groupId}/prompts(groupId=${group.id})}"
@@ -76,7 +76,7 @@
                     <p class="scrapbook-card-meta">shared little updates</p>
 
                     <div class="mb-3">
-                        <span class="scrapbook-pill scrapbook-pill-blue pill-tilt-left">☰ Monthly circle</span>
+                        <span class="scrapbook-pill scrapbook-pill-blue pill-tilt-left" th:text="'☰ ' + ${group.frequency} + ' circle'"></span>
                     </div>
 
                     <a th:href="@{/groups/{groupId}/prompts(groupId=${group.id})}"
@@ -104,7 +104,7 @@
                     <p class="scrapbook-card-meta">letters worth keeping</p>
 
                     <div class="mb-3">
-                        <span class="scrapbook-pill scrapbook-pill-pink">♡ Monthly circle</span>
+                        <span class="scrapbook-pill scrapbook-pill-pink" th:text="'♡ ' + ${group.frequency} + ' circle'"></span>
                     </div>
 
                     <a th:href="@{/groups/{groupId}/prompts(groupId=${group.id})}"

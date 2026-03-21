@@ -16,7 +16,7 @@ public class Group {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String frequency = "MONTHLY";
+    private String frequency;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -24,9 +24,9 @@ public class Group {
     @OneToMany(mappedBy = "group")
     private List<GroupMembership> members;
 
-    public Group(String name) {
+    public Group(String name, String frequency) {
         this.name = name;
-        this.frequency = "MONTHLY";
+        this.frequency = frequency;
     }
 
     @PrePersist
