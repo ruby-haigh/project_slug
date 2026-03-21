@@ -38,7 +38,9 @@
     <div th:if="${!#lists.isEmpty(groups)}" class="scrapbook-grid">
         <th:block th:each="group, iterStat : ${groups}">
             <div class="circle-card scrapbook-card scrapbook-card-peach card-tilt-left"
-                 th:if="${iterStat.index % 3 == 0}">
+                 th:if="${iterStat.index % 3 == 0}"
+                 th:classappend="${!hasFeedMap[group.id]} ? ' disabled-card'"
+                 th:onclick="${hasFeedMap[group.id]} ? 'window.location.href=\'/feed/' + ${group.id} + '\''">
                 <div class="scrapbook-card-body">
                     <div class="scrapbook-illustration">
                         <div class="scrapbook-icon">☺</div>
@@ -66,7 +68,9 @@
             </div>
 
             <div class="circle-card scrapbook-card scrapbook-card-blue card-tilt-right"
-                 th:if="${iterStat.index % 3 == 1}">
+                 th:if="${iterStat.index % 3 == 1}"
+                 th:classappend="${!hasFeedMap[group.id]} ? ' disabled-card'"
+                 th:onclick="${hasFeedMap[group.id]} ? 'window.location.href=\'/feed/' + ${group.id} + '\''">
                 <div class="scrapbook-card-body">
                     <div class="scrapbook-illustration">
                         <div class="scrapbook-icon">✧</div>
@@ -94,7 +98,9 @@
             </div>
 
             <div class="circle-card scrapbook-card scrapbook-card-pink card-tilt-left"
-                 th:if="${iterStat.index % 3 == 2}">
+                 th:if="${iterStat.index % 3 == 2}"
+                 th:classappend="${!hasFeedMap[group.id]} ? ' disabled-card'"
+                 th:onclick="${hasFeedMap[group.id]} ? 'window.location.href=\'/feed/' + ${group.id} + '\''">
                 <div class="scrapbook-card-body">
                     <div class="scrapbook-illustration">
                         <div class="scrapbook-icon">✉</div>
