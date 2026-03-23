@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -36,7 +35,7 @@ public class FeedController {
     private PromptRepository promptRepository;
 
     @GetMapping("/{groupId}")
-    public String showFeed(@PathVariable Long groupId, Model model, RedirectAttributes redirectAttributes) {
+    public String showFeed(@PathVariable Long groupId, Model model) {
 
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new RuntimeException("Group not found"));
@@ -66,6 +65,7 @@ public class FeedController {
             responseData.put("responseText", r.getResponseText());
             responseData.put("userId", r.getUserId());
             responseData.put("userName", r.getUser().getName());
+            responseData.put("imageUrl", r.getImageUrl());
 
             newsletter.computeIfAbsent(prompt, k -> new ArrayList<>()).add(responseData);
         }

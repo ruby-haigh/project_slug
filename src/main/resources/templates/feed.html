@@ -11,9 +11,7 @@
 
 <script th:inline="javascript">
     const unlockTime = new Date([[${unlockTime}]]);
-</script>
 
-<script>
     function updateCountdown() {
         const now = new Date();
         const diff = unlockTime - now;
@@ -52,7 +50,7 @@
                 data-bs-toggle="modal"
                 data-bs-target="#membersModal">
             <span th:text="${#lists.size(group.members)}"></span>
-            <span class="stat-label" th:text="${#lists.size(group.members) == 1} ? 'member' : 'members'"></span>
+            <span th:text="${#lists.size(group.members) == 1} ? 'member' : 'members'"></span>
         </button>
     </span>
             <span th:if="${group.members == null or #lists.isEmpty(group.members)}">
@@ -64,9 +62,9 @@
         <p>No responses yet 💌</p>
     </div>
 
-    <div th:each="entry, iterStat : ${newsletter}" class="mb-4">
+    <div th:each="entry : ${newsletter}" class="mb-4">
         <div class="feed-card
-        [[${iterStat.index == 0} ? 'card-tilt-1 tape-top-left tape-bottom-right' : '']]
+             [[${iterStat.index == 0} ? 'card-tilt-1 tape-top-left tape-bottom-right' : '']]
         [[${iterStat.index == 1} ? 'card-tilt-2' : '']]">
 
                 <!-- Prompt -->
@@ -74,11 +72,7 @@
 
                 <!-- Responses -->
                 <div th:each="response : ${entry.value}" class="mb-2 p-2 rounded" style="background:#f9f6ef;">
-<<<<<<< Updated upstream
-                    <strong th:text="${response.userId}">User</strong>
-=======
                     <strong th:text="${response.userName}">User</strong>
->>>>>>> Stashed changes
                     <p class="mb-0" th:text="${response.responseText}">Response</p>
                     <img th:if="${response.imageUrl != null}"
                          th:src="${response.imageUrl}"
@@ -130,8 +124,14 @@
 
         </div>
     </div>
-
-<<<<<<< Updated upstream
+</div>
+    <div class="overlay" th:if="${feedLocked}">
+        <div class="overlay-content">
+            <h2>🔒 Feed Locked</h2>
+            <p>Unlocks in:</p>
+            <p id="countdown"></p>
+        </div>
+    </div>
     <div class="modal fade" id="imageModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered" style="max-width: 70vw;">
             <div class="modal-content bg-transparent border-0">
@@ -141,19 +141,7 @@
                 </div>
             </div>
         </div>
-=======
->>>>>>> Stashed changes
     </div>
-</div>
-
-    <div class="overlay" th:if="${feedLocked}">
-        <div class="overlay-content">
-            <h2>🔒 Feed Locked</h2>
-            <p>Unlocks in:</p>
-            <p id="countdown"></p>
-        </div>
-    </div>
-</div>
 <!-- Members Modal -->
 <div class="modal fade" id="membersModal" tabindex="-1" aria-labelledby="membersModalLabel" aria-hidden="true">
     <div class="modal-dialog">
