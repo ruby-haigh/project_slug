@@ -95,9 +95,12 @@ public class FeedController {
     @PostMapping("/{groupId}")
     public RedirectView leaveGroup(@AuthenticationPrincipal DefaultOidcUser oidcUser, @PathVariable Long groupId) {
         String email = oidcUser.getEmail();
-        User user = userRepository.findUserByEmail(email).get();
-        Group group = groupRepository.findById(groupId).get();
-        GroupMembership groupMembership = membershipRepository.findByUserAndGroup(user, group).get();
+        User user = userRepository.findUserByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new RuntimeException("Group not found"));
+        GroupMembership groupMembership = membershipRepository.findByUserAndGroup(user, group)
+                .orElseThrow(() -> new RuntimeException("Membership not found"));
         membershipRepository.delete(groupMembership);
         return new RedirectView("/");
     }
