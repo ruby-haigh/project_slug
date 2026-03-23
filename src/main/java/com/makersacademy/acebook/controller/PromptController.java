@@ -12,6 +12,7 @@ import com.makersacademy.acebook.repository.GroupRepository;
 import com.makersacademy.acebook.repository.GroupResponseRepository;
 import com.makersacademy.acebook.repository.PromptRepository;
 import com.makersacademy.acebook.repository.UserRepository;
+import com.makersacademy.acebook.service.CloudinaryService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -51,6 +53,9 @@ public class PromptController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     @GetMapping("/groups/{groupId}/prompts/open")
     public String openPromptFormFromEmail(@PathVariable Long groupId, HttpSession session) {
@@ -131,7 +136,8 @@ public class PromptController {
             @PathVariable Long groupId,
             @RequestParam Long groupCycleId,
             @RequestParam List<Long> promptIds,
-            @RequestParam List<String> responseTexts
+            @RequestParam List<String> responseTexts,
+            @RequestParam(required = false) List<MultipartFile> images
     ) {
         User dbUser = getCurrentUser().orElseThrow();
         Long userId = dbUser.getId();
@@ -143,21 +149,35 @@ public class PromptController {
             return "redirect:/groups/" + groupId + "/prompts";
         }
 
+        // Loop through each prompt that was submitted in the form
         for (int i = 0; i < promptIds.size(); i++) {
             Long promptId = promptIds.get(i);
             String responseText = responseTexts.get(i);
 
+            // Skip this prompt if the user left the text field empty
             if (responseText == null || responseText.trim().isEmpty()) {
                 continue;
             }
 
+            // Create a new response object with the cycle, group, user and prompt context
             GroupResponse response = new GroupResponse(
                     groupCycleId,
                     groupId,
                     userId,
                     promptId,
-                    responseText
+                    responseText,
+                    LocalDateTime.now()
             );
+
+            // Upload image to Cloudinary if one was provided for this prompt
+            if (images != null && i < images.size() && !images.get(i).isEmpty()) {
+                try {
+                    String imageUrl = cloudinaryService.uploadFile(images.get(i));
+                    response.setImageUrl(imageUrl);
+                } catch (Exception e) {
+                    System.out.println("Image upload failed: " + e.getMessage());
+                }
+            }
 
             groupResponseRepository.save(response);
         }

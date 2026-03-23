@@ -11,9 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -48,23 +48,36 @@ public class FeedController {
     private UserRepository userRepository;
 
     @GetMapping("/{groupId}")
-    public String showFeed(@PathVariable Long groupId, Model model) {
+    public String showFeed(@PathVariable Long groupId,
+                           @RequestParam(required = false) Long cycleId,
+                           Model model) {
 
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new RuntimeException("Group not found"));
 
-        GroupCycle cycle = groupCycleRepository
-                .findCurrentCycleByGroupId(groupId, LocalDateTime.now())
-                .orElseThrow(() -> new RuntimeException("No cycle"));
+        GroupCycle cycle;
+        if (cycleId != null) {
+            cycle = groupCycleRepository.findById(cycleId)
+                    .orElseThrow(() -> new RuntimeException("No cycle"));
+            if (!cycle.getGroupId().equals(groupId)) {
+                throw new RuntimeException("Cycle does not belong to this group");
+            }
+        } else {
+            cycle = groupCycleRepository
+                    .findCurrentCycleByGroupId(groupId, LocalDateTime.now())
+                    .orElseThrow(() -> new RuntimeException("No cycle"));
+        }
+
+        LocalDateTime start = cycle.getCycleStart();
+        LocalDateTime end = start.plusWeeks(1);
+
+        boolean feedLocked = LocalDateTime.now().isBefore(end);
+
+        model.addAttribute("feedLocked", feedLocked);
+        model.addAttribute("unlockTime", end);
 
         List<GroupResponse> responses =
-                groupResponseRepository.findByGroupCycleId(cycle.getId());
-
-        Map<Prompt, List<GroupResponse>> newsletter = new LinkedHashMap<>();
-        for (GroupResponse r : responses) {
-            Prompt prompt = promptRepository.findById(r.getPromptId()).orElseThrow();
-            newsletter.computeIfAbsent(prompt, k -> new ArrayList<>()).add(r);
-        }
+                groupResponseRepository.findResponsesForFirstWeek(cycle.getId(), start, end);
 
         // get logged-in auth user
         DefaultOidcUser user = (DefaultOidcUser) SecurityContextHolder
@@ -109,7 +122,24 @@ public class FeedController {
             reactionCountsByResponse.put(response.getId(), emojiCounts);
         }
 
+        Map<Prompt, List<Map<String, Object>>> newsletter = new LinkedHashMap<>();
+
+        for (GroupResponse r : responses) {
+            Prompt prompt = promptRepository.findById(r.getPromptId()).orElseThrow();
+
+            // create a small map with response + user info
+            Map<String, Object> responseData = new LinkedHashMap<>();
+            responseData.put("responseId", r.getId());
+            responseData.put("responseText", r.getResponseText());
+            responseData.put("userId", r.getUserId());
+            responseData.put("userName", r.getUser().getName());
+            responseData.put("imageUrl", r.getImageUrl());
+
+            newsletter.computeIfAbsent(prompt, k -> new ArrayList<>()).add(responseData);
+        }
+
         model.addAttribute("group", group);
+        model.addAttribute("cycle", cycle);
         model.addAttribute("newsletter", newsletter);
         model.addAttribute("reactionCountsByResponse", reactionCountsByResponse);
         model.addAttribute("userReactionByResponse", userReactionByResponse);

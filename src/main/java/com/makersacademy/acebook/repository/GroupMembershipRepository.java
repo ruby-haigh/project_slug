@@ -16,4 +16,6 @@ public interface GroupMembershipRepository extends JpaRepository<GroupMembership
 
     @Query("SELECT gm.group FROM GroupMembership gm WHERE gm.user = :user")
     List<Group> findGroupsByUser(@Param("user") User user);
+
+    long countByGroup(Group group);
 }
