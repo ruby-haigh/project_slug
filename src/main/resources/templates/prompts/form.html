@@ -12,7 +12,7 @@
 
 <div class="container scrapbook-shell mt-5">
     <h1 class="text-center scrapbook-title" th:text="'Prompt form for ' + ${group.name}">Prompt form</h1>
-    <p class="text-center scrapbook-subtitle">It’s time for your monthly update</p>
+    <p class="text-center scrapbook-subtitle">It's time for your monthly update</p>
 
     <div class="scrapbook-grid">
         <div class="circle-card scrapbook-card scrapbook-card-blue card-tilt-right">
@@ -25,9 +25,9 @@
 
                 <div th:if="${alreadySubmitted}" class="w-100 text-center">
                     <div class="scrapbook-message scrapbook-message-success">
-                        You’ve already submitted your update for this cycle.
+                        You've already submitted your update for this cycle.
                     </div>
-                    <p class="scrapbook-card-meta">You’re all set for this month.</p>
+                    <p class="scrapbook-card-meta">You're all set for this month.</p>
                     <div class="text-center mt-4">
                         <a th:href="@{/groups}" class="scrapbook-link">
                             <span>←</span>
@@ -39,7 +39,8 @@
                 <div th:unless="${alreadySubmitted}" class="w-100">
                     <p class="scrapbook-card-meta mb-4">Answer the prompts below and your responses will be saved to this cycle.</p>
 
-                    <form th:action="@{/groups/{groupId}/prompts(groupId=${groupId})}" method="post" class="scrapbook-form">
+                    <form th:action="@{/groups/{groupId}/prompts(groupId=${groupId})}" method="post"
+                          enctype="multipart/form-data" class="scrapbook-form">
                         <input type="hidden" name="groupCycleId" th:value="${groupCycleId}" />
 
                         <div th:each="prompt, iterStat : ${prompts}" class="mb-4">
@@ -52,6 +53,10 @@
                                     name="responseTexts"
                                     class="scrapbook-input scrapbook-textarea"
                                     placeholder="Type your answer here"></textarea>
+                            <div class="mt-2">
+                                <label class="scrapbook-label small text-muted">📷 Optional photo</label>
+                                <input type="file" name="images" accept="image/*" class="form-control form-control-sm mt-1">
+                            </div>
                         </div>
 
                         <button type="submit" class="scrapbook-pill scrapbook-pill-peach scrapbook-button mt-3">
