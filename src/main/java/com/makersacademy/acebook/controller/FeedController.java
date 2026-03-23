@@ -56,15 +56,31 @@ public class FeedController {
                     .orElseThrow(() -> new RuntimeException("No cycle"));
         }
 
-        List<GroupResponse> responses =
-                groupResponseRepository.findByGroupCycleId(cycle.getId());
+        LocalDateTime start = cycle.getCycleStart();
+        LocalDateTime end = start.plusWeeks(1);
 
-        Map<Prompt, List<GroupResponse>> newsletter = new LinkedHashMap<>();
+        boolean feedLocked = LocalDateTime.now().isBefore(end);
+
+        model.addAttribute("feedLocked", feedLocked);
+        model.addAttribute("unlockTime", end);
+
+        List<GroupResponse> responses =
+                groupResponseRepository.findResponsesForFirstWeek(cycle.getId(), start, end);
+
+        Map<Prompt, List<Map<String, Object>>> newsletter = new LinkedHashMap<>();
+
         for (GroupResponse r : responses) {
             Prompt prompt = promptRepository.findById(r.getPromptId()).orElseThrow();
-            newsletter.computeIfAbsent(prompt, k -> new ArrayList<>()).add(r);
-        }
 
+            // create a small map with response + user info
+            Map<String, Object> responseData = new LinkedHashMap<>();
+            responseData.put("responseText", r.getResponseText());
+            responseData.put("userId", r.getUserId());
+            responseData.put("userName", r.getUser().getName());
+            responseData.put("imageUrl", r.getImageUrl());
+
+            newsletter.computeIfAbsent(prompt, k -> new ArrayList<>()).add(responseData);
+        }
 
         model.addAttribute("group", group);
         model.addAttribute("cycle", cycle);

@@ -8,32 +8,63 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link th:href="@{/main.css}" rel="stylesheet">
 </head>
-<body>
 
+<script th:inline="javascript">
+    const unlockTime = new Date([[${unlockTime}]]);
+
+    function updateCountdown() {
+        const now = new Date();
+        const diff = unlockTime - now;
+
+        if (diff <= 0) {
+            document.getElementById("countdown").innerText = "Unlocked!";
+            location.reload();
+            return;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((diff / (1000 * 60)) % 60);
+
+        document.getElementById("countdown").innerText =
+            `${days}d ${hours}h ${minutes}m`;
+    }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+</script>
+<body>
+<div class="feed-container">
 <!-- Navbar -->
 <div th:replace="fragments/navbar :: navbar"></div>
 
 <div class="container mt-5" style="max-width: 700px;">
-
+    <div class="feed-content" th:classappend="${feedLocked} ? 'locked'">
     <!-- Group name -->
     <h1 class="fw-bold mb-2" th:text="${group.name}">Group Name</h1>
 
     <!-- Members -->
     <p class="text-muted mb-4">
-        <span th:if="${group.members != null}" th:each="membership : ${group.members}"
-              class="badge bg-light text-dark me-1"
-              th:text="${membership.user.name}">Member</span>
-        <span th:if="${group.members == null}">No members yet</span>
-    </p>
-
+    <span th:if="${group.members != null and #lists.size(group.members) > 0}">
+        <button type="button" class="btn btn-outline-secondary btn-sm"
+                data-bs-toggle="modal"
+                data-bs-target="#membersModal">
+            <span th:text="${#lists.size(group.members)}"></span>
+            <span th:text="${#lists.size(group.members) == 1} ? 'member' : 'members'"></span>
+        </button>
+    </span>
+            <span th:if="${group.members == null or #lists.isEmpty(group.members)}">
+        No members yet
+    </span>
+        </p>
     <!-- Newsletter: prompts and responses -->
     <div th:if="${#maps.isEmpty(newsletter)}" class="text-center text-muted mt-5">
         <p>No responses yet 💌</p>
     </div>
 
-    <div th:each="entry, iterStat : ${newsletter}" class="mb-4">
+    <div th:each="entry : ${newsletter}" class="mb-4">
         <div class="feed-card
-        [[${iterStat.index == 0} ? 'card-tilt-1 tape-top-left tape-bottom-right' : '']]
+             [[${iterStat.index == 0} ? 'card-tilt-1 tape-top-left tape-bottom-right' : '']]
         [[${iterStat.index == 1} ? 'card-tilt-2' : '']]">
 
                 <!-- Prompt -->
@@ -41,7 +72,7 @@
 
                 <!-- Responses -->
                 <div th:each="response : ${entry.value}" class="mb-2 p-2 rounded" style="background:#f9f6ef;">
-                    <strong th:text="${response.userId}">User</strong>
+                    <strong th:text="${response.userName}">User</strong>
                     <p class="mb-0" th:text="${response.responseText}">Response</p>
                     <img th:if="${response.imageUrl != null}"
                          th:src="${response.imageUrl}"
@@ -55,7 +86,6 @@
                 </div>
         </div>
     </div>
-
 
     <div class="feed-info-card text-center mx-auto">
 
@@ -94,7 +124,14 @@
 
         </div>
     </div>
-
+</div>
+    <div class="overlay" th:if="${feedLocked}">
+        <div class="overlay-content">
+            <h2>🔒 Feed Locked</h2>
+            <p>Unlocks in:</p>
+            <p id="countdown"></p>
+        </div>
+    </div>
     <div class="modal fade" id="imageModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered" style="max-width: 70vw;">
             <div class="modal-content bg-transparent border-0">
@@ -105,8 +142,23 @@
             </div>
         </div>
     </div>
+<!-- Members Modal -->
+<div class="modal fade" id="membersModal" tabindex="-1" aria-labelledby="membersModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="membersModalLabel">Group Members</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <ul class="list-group">
+                    <li th:each="membership : ${group.members}" class="list-group-item"
+                        th:text="${membership.user.name}">Member Name</li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
