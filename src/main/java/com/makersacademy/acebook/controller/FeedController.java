@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -35,14 +36,25 @@ public class FeedController {
     private PromptRepository promptRepository;
 
     @GetMapping("/{groupId}")
-    public String showFeed(@PathVariable Long groupId, Model model) {
+    public String showFeed(@PathVariable Long groupId,
+                           @RequestParam(required = false) Long cycleId,
+                           Model model) {
 
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new RuntimeException("Group not found"));
 
-        GroupCycle cycle = groupCycleRepository
-                .findCurrentCycleByGroupId(groupId, LocalDateTime.now())
-                .orElseThrow(() -> new RuntimeException("No cycle"));
+        GroupCycle cycle;
+        if (cycleId != null) {
+            cycle = groupCycleRepository.findById(cycleId)
+                    .orElseThrow(() -> new RuntimeException("No cycle"));
+            if (!cycle.getGroupId().equals(groupId)) {
+                throw new RuntimeException("Cycle does not belong to this group");
+            }
+        } else {
+            cycle = groupCycleRepository
+                    .findCurrentCycleByGroupId(groupId, LocalDateTime.now())
+                    .orElseThrow(() -> new RuntimeException("No cycle"));
+        }
 
         LocalDateTime start = cycle.getCycleStart();
         LocalDateTime end = start.plusWeeks(1);
@@ -71,6 +83,7 @@ public class FeedController {
         }
 
         model.addAttribute("group", group);
+        model.addAttribute("cycle", cycle);
         model.addAttribute("newsletter", newsletter);
 
         return "feed";

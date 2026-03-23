@@ -19,6 +19,9 @@ public interface GroupCycleRepository extends JpaRepository<GroupCycle, Long> {
         """)
     Optional<GroupCycle> findCurrentCycleByGroupId(Long groupId, LocalDateTime now);
 
+    Optional<GroupCycle> findTopByGroupIdOrderByCycleStartDesc(Long groupId);
+
 }
+
 
 
