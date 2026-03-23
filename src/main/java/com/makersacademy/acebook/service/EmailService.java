@@ -64,6 +64,28 @@ public class EmailService {
         }
     }
 
+    public void sendFeedReadyEmail(String toEmail, String groupName, String frequencyLabel, String feedLink) {
+        MimeMessage message = mailSender.createMimeMessage();
+
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            helper.setTo(toEmail);
+            helper.setSubject("Your " + frequencyLabel + " issue for " + groupName + " is ready");
+
+            String htmlMsg = "<p>Hi!</p>"
+                    + "<p>Your " + frequencyLabel + " issue for '<strong>" + groupName + "</strong>' is now ready to view.</p>"
+                    + "<p>Click <a href='" + feedLink + "'>here</a> to open the latest feed.</p>"
+                    + "<p>It’s filled with everyone’s responses from this round.</p>";
+
+            helper.setText(htmlMsg, true);
+            mailSender.send(message);
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
     // Send simple plain text email (general purpose)
     public void sendSimpleEmail(String[] to, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();

@@ -1,7 +1,9 @@
 package com.makersacademy.acebook.service;
 
 import com.makersacademy.acebook.model.Group;
+import com.makersacademy.acebook.model.GroupCycle;
 import com.makersacademy.acebook.model.GroupMembership;
+import com.makersacademy.acebook.repository.GroupCycleRepository;
 import com.makersacademy.acebook.repository.GroupMembershipRepository;
 import com.makersacademy.acebook.repository.GroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -18,6 +21,9 @@ public class MonthlyPromptEmailService {
 
     @Autowired
     private GroupRepository groupRepository;
+
+    @Autowired
+    private GroupCycleRepository groupCycleRepository;
 
     @Autowired
     private GroupMembershipRepository groupMembershipRepository;
@@ -67,6 +73,19 @@ public class MonthlyPromptEmailService {
 
     public int sendPromptEmailsForGroup(Long groupId) {
         Group group = groupRepository.findById(groupId).orElseThrow();
+
+        LocalDateTime now = LocalDateTime.now();
+        if (groupCycleRepository.findCurrentCycleByGroupId(groupId, now).isEmpty()) {
+            long cycleLengthDays;
+            if (group.getFrequency() != null && group.getFrequency().equalsIgnoreCase("FORTNIGHTLY")) {
+                cycleLengthDays = 14;
+            } else {
+                cycleLengthDays = 30;
+            }
+
+            GroupCycle cycle = new GroupCycle(groupId, now, now.plusDays(cycleLengthDays));
+            groupCycleRepository.save(cycle);
+        }
 
         List<GroupMembership> memberships = groupMembershipRepository.findByGroup(group);
         String promptFormLink = appBaseUrl + "/groups/" + group.getId() + "/prompts/open";

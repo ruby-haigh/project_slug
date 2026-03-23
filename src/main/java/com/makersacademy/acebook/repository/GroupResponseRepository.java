@@ -11,6 +11,7 @@ public interface GroupResponseRepository extends JpaRepository<GroupResponse, Lo
     List<GroupResponse> findByGroupCycleIdAndUserId(Long groupCycleId, Long userId);
     List<GroupResponse> findByGroupCycleId(Long groupCycleId);
     boolean existsByGroupId(Long groupId);
+    boolean existsByGroupCycleId(Long groupCycleId);
     // Check if a user has already submitted responses in this cycle
     boolean existsByGroupCycleIdAndUserId(Long groupCycleId, Long userId);
 }

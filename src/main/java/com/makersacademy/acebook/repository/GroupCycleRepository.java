@@ -17,4 +17,6 @@ public interface GroupCycleRepository extends JpaRepository<GroupCycle, Long> {
         AND :now BETWEEN gc.cycleStart AND gc.cycleEnd
         """)
     Optional<GroupCycle> findCurrentCycleByGroupId(Long groupId, LocalDateTime now);
+
+    Optional<GroupCycle> findTopByGroupIdOrderByCycleStartDesc(Long groupId);
 }
