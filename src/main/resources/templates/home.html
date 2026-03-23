@@ -52,8 +52,17 @@
                         <div class="mt-auto pt-3">
                             <span class="home-card-pill pill-tilt-right">
                                 <span class="home-card-pill-icon">✦</span>
-                                <span>March issue ready</span>
+                                <span th:with="issue=${issueInfoByGroup[group.id]}">
+
+                                    <span th:if="${issue != null and issue.issueReady}"
+                                          th:text="${issue.monthName} + ' issue ready'"></span>
+
+                                    <span th:if="${issue != null and !issue.issueReady}"
+                                          th:text="${issue.daysUntilNextIssue} == 1 ? 'Next issue in 1 day' : 'Next issue in ' + ${issue.daysUntilNextIssue} + ' days'"></span>
+
+                                </span>
                             </span>
+
                         </div>
                     </div>
                 </div>
@@ -72,7 +81,15 @@
                         <div class="mt-auto pt-3">
                             <span class="home-card-pill pill-tilt-left">
                                 <span class="home-card-pill-icon">✦</span>
-                                <span>March issue ready</span>
+                                <span th:with="issue=${issueInfoByGroup[group.id]}">
+
+                                    <span th:if="${issue != null and issue.issueReady}"
+                                          th:text="${issue.monthName} + ' issue ready'"></span>
+
+                                    <span th:if="${issue != null and !issue.issueReady}"
+                                          th:text="${issue.daysUntilNextIssue} == 1 ? 'Next issue in 1 day' : 'Next issue in ' + ${issue.daysUntilNextIssue} + ' days'"></span>
+
+                                </span>
                             </span>
                         </div>
                     </div>
@@ -92,7 +109,15 @@
                         <div class="mt-auto pt-3">
                             <span class="home-card-pill pill-tilt-right">
                                 <span class="home-card-pill-icon">☷</span>
-                                <span>Next issue in 5 days</span>
+                                <span th:with="issue=${issueInfoByGroup[group.id]}">
+
+                                    <span th:if="${issue != null and issue.issueReady}"
+                                          th:text="${issue.monthName} + ' issue ready'"></span>
+
+                                    <span th:if="${issue != null and !issue.issueReady}"
+                                          th:text="${issue.daysUntilNextIssue} == 1 ? 'Next issue in 1 day' : 'Next issue in ' + ${issue.daysUntilNextIssue} + ' days'"></span>
+
+                                </span>
                             </span>
                         </div>
                     </div>
