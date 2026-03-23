@@ -10,6 +10,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -37,9 +38,27 @@ public class MonthlyPromptEmailService {
                 continue;
             }
 
-            int scheduledDay = Math.min(group.getCreatedAt().getDayOfMonth(), today.lengthOfMonth());
-            if (today.getDayOfMonth() != scheduledDay) {
-                continue;
+            LocalDate createdDate = group.getCreatedAt().toLocalDate();
+            String frequency = group.getFrequency();
+
+            if (frequency != null && frequency.equalsIgnoreCase("FORTNIGHTLY")) {
+                long daysSinceCreated = ChronoUnit.DAYS.between(createdDate, today);
+
+                if (daysSinceCreated < 0) {
+                    continue;
+                }
+
+                if (daysSinceCreated % 14 != 0) {
+                    continue;
+                }
+            } else {
+                int createdDayOfMonth = createdDate.getDayOfMonth();
+                int todayDayOfMonth = today.getDayOfMonth();
+                int sendDayThisMonth = Math.min(createdDayOfMonth, today.lengthOfMonth());
+
+                if (todayDayOfMonth != sendDayThisMonth) {
+                    continue;
+                }
             }
 
             sendPromptEmailsForGroup(group);
@@ -48,27 +67,41 @@ public class MonthlyPromptEmailService {
 
     public int sendPromptEmailsForGroup(Long groupId) {
         Group group = groupRepository.findById(groupId).orElseThrow();
-        return sendPromptEmailsForGroup(group);
-    }
 
-    private int sendPromptEmailsForGroup(Group group) {
         List<GroupMembership> memberships = groupMembershipRepository.findByGroup(group);
         String promptFormLink = appBaseUrl + "/groups/" + group.getId() + "/prompts/open";
 
+        String frequencyLabel;
+        if (group.getFrequency() != null && group.getFrequency().equalsIgnoreCase("FORTNIGHTLY")) {
+            frequencyLabel = "fortnightly";
+        } else {
+            frequencyLabel = "monthly";
+        }
+
         int recipients = 0;
         for (GroupMembership membership : memberships) {
-            if (membership.getUser() == null || membership.getUser().getEmail() == null) {
+            if (membership.getUser() == null) {
+                continue;
+            }
+
+            String emailAddress = membership.getUser().getEmail();
+            if (emailAddress == null || emailAddress.isBlank()) {
                 continue;
             }
 
             emailService.sendPromptFormEmail(
-                    membership.getUser().getEmail(),
+                    emailAddress,
                     group.getName(),
+                    frequencyLabel,
                     promptFormLink
             );
             recipients++;
         }
 
         return recipients;
+    }
+
+    private void sendPromptEmailsForGroup(Group group) {
+        sendPromptEmailsForGroup(group.getId());
     }
 }
