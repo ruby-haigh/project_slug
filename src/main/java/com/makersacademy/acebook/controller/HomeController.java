@@ -2,6 +2,7 @@ package com.makersacademy.acebook.controller;
 
 import com.makersacademy.acebook.model.Group;
 import com.makersacademy.acebook.model.User;
+import com.makersacademy.acebook.repository.GroupCycleRepository;
 import com.makersacademy.acebook.repository.GroupMembershipRepository;
 import com.makersacademy.acebook.repository.GroupResponseRepository;
 import com.makersacademy.acebook.repository.UserRepository;
@@ -10,52 +11,61 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 
 @Controller
 public class HomeController {
 
 	@Autowired
-	private GroupMembershipRepository membershipRepository;
+	GroupMembershipRepository groupMembershipRepository;
 
 	@Autowired
-	private UserRepository userRepository;
+	UserRepository userRepository;
 
 	@Autowired
-	private GroupResponseRepository groupResponseRepository;
+	GroupResponseRepository groupResponseRepository;
 
-	private User getCurrentUser() {
+	@Autowired
+	GroupCycleRepository groupCycleRepository;
+
+	@GetMapping("/")
+	public ModelAndView index() {
+		ModelAndView modelAndView = new ModelAndView("home");
+
 		DefaultOidcUser principal = (DefaultOidcUser) SecurityContextHolder
 				.getContext()
 				.getAuthentication()
 				.getPrincipal();
 		String email = (String) principal.getAttributes().get("email");
-		return userRepository.findUserByEmail(email).orElseThrow();
-	}
+		User user = userRepository.findUserByEmail(email).orElseThrow();
 
-	@GetMapping("/")
-	public ModelAndView index() {
-		ModelAndView mav = new ModelAndView("home");
+		List<Group> groups = groupMembershipRepository.findGroupsByUser(user);
 
-		User user = getCurrentUser();
-		List<Group> groups = membershipRepository.findGroupsByUser(user);
 
-		if (groups == null) groups = List.of();
-		Map<Long, Boolean> hasFeedMap = new HashMap<>();
+		Map<Long, Long> memberCounts = groups.stream()
+				.collect(Collectors.toMap(
+						Group::getId,
+						group -> groupMembershipRepository.countByGroup(group)
+				));
 
-		for (Group group : groups) {
-			boolean hasFeed = groupResponseRepository.existsByGroupId(group.getId());
-			hasFeedMap.put(group.getId(), hasFeed);
-		}
+		modelAndView.addObject("groups", groups);
+		modelAndView.addObject("memberCounts", memberCounts);
 
-		mav.addObject("hasFeedMap", hasFeedMap);
 
-		mav.addObject("groups", groups);
 
-		return mav;
+		Map<Long, Boolean> hasFeedMap = groups.stream()
+				.collect(Collectors.toMap(
+						Group::getId,
+						group -> groupResponseRepository.existsByGroupId(group.getId())
+				));
+
+		modelAndView.addObject("hasFeedMap", hasFeedMap);
+		return modelAndView;
 	}
 }
