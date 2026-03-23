@@ -1030,6 +1030,15 @@ h6 {
 
 
 /* Disabled group cards */
+.clickable-card {
+    cursor: pointer;
+}
+
+.clickable-card .scrapbook-pill:not(.scrapbook-link-button):not(.scrapbook-button),
+.clickable-card .home-card-pill {
+    cursor: default;
+}
+
 .disabled-card {
     opacity: 0.6;
     cursor: not-allowed;
@@ -1039,6 +1048,33 @@ h6 {
 .disabled-card:hover {
     transform: rotate(var(--rotation)) !important;
     box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+}
+
+@keyframes created-card-pop {
+    0% {
+        box-shadow: 0 18px 40px rgba(95, 87, 78, 0.12);
+        transform: rotate(var(--rotation)) scale(1);
+    }
+
+    35% {
+        box-shadow: 0 0 0 8px rgba(122, 155, 142, 0.16), 0 24px 50px rgba(95, 87, 78, 0.18);
+        transform: rotate(var(--rotation)) scale(1.03);
+    }
+
+    70% {
+        box-shadow: 0 0 0 14px rgba(122, 155, 142, 0.08), 0 20px 44px rgba(95, 87, 78, 0.16);
+        transform: rotate(var(--rotation)) scale(1.01);
+    }
+
+    100% {
+        box-shadow: 0 18px 40px rgba(95, 87, 78, 0.12);
+        transform: rotate(var(--rotation)) scale(1);
+    }
+}
+
+.created-card {
+    animation: created-card-pop 1.5s ease-out 2;
+    border-color: rgba(122, 155, 142, 0.45);
 }
 
 
