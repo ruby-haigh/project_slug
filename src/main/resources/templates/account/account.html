@@ -24,7 +24,7 @@
             <!--profile pic-->
             <div class="mb-3 text-center" style="position: relative; display: inline-block;">
                 <label for="profilePicInput" style="cursor: pointer;">
-                    <img th:src="${user.profilePictureUrl} ?: 'https://ui-avatars.com/api/?name=' + ${user.email?.substring(0,1)} + '&background=random&rounded=true&size=80'"
+                    <img th:src="${user.profilePictureUrl} ?: 'https://ui-avatars.com/api/?name=' + ${user.email?.substring(0,1)} + '&background=' + ${user.avatarColour} + '&color=666&rounded=true&size=80'"
                          alt="Profile picture"
                          class="rounded-circle"
                          style="width: 80px; height: 80px; object-fit: cover;">
