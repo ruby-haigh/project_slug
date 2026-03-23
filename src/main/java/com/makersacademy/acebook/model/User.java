@@ -26,4 +26,9 @@ public class User {
         this.name = name;
         this.bio = bio;
     }
+
+    public String getAvatarColour() {
+        String[] pastels = {"f2c4ce", "c4def2", "c4f2d5", "f2e8c4", "e8c4f2", "f2cfc4"};
+        return pastels[(int)(Math.abs(email.hashCode()) % pastels.length)];
+    }
 }

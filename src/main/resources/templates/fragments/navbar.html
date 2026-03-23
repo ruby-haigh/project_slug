@@ -12,7 +12,7 @@
 
             <!--account dropdown-->
             <div class="dropdown">
-                <img id="profile-pic-dropdown" th:src="${loggedInUser?.profilePictureUrl} ?: 'https://ui-avatars.com/api/?name=' + ${loggedInUser?.email?.substring(0,1)} + '&background=random&rounded=true&size=36'"
+                <img id="profile-pic-dropdown" th:src="${loggedInUser?.profilePictureUrl} ?: 'https://ui-avatars.com/api/?name=' + ${loggedInUser?.email?.substring(0,1)} + '&background=' + ${loggedInUser?.avatarColour} + '&color=666&rounded=true&size=36'"
                      alt="Profile"
                      class="rounded-circle"
                      data-bs-toggle="dropdown"

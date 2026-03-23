@@ -44,6 +44,9 @@ public class GroupResponse {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     public GroupResponse(Long groupCycleId, Long groupId, Long userId, Long promptId, String responseText) {
         this.groupCycleId = groupCycleId;
         this.groupId = groupId;
