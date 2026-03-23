@@ -59,15 +59,19 @@
                     </div>
 
                     <a th:href="@{/groups/{groupId}/prompts(groupId=${group.id})}"
+                       onclick="event.stopPropagation()"
                        class="scrapbook-pill scrapbook-pill-green scrapbook-link-button mb-3">
                         <span>✎</span>
                         <span>Start update</span>
                     </a>
 
-                    <form th:action="@{/groups/{id}/invite(id=${group.id})}" method="post" class="scrapbook-form mt-3">
-                        <label class="scrapbook-label" th:for="'invite-' + ${group.id}">Invite by email</label>
-                        <input th:id="'invite-' + ${group.id}" type="email" name="email" placeholder="friend@example.com" class="scrapbook-input">
-                        <button type="submit" class="scrapbook-pill scrapbook-pill-pink scrapbook-button mt-3">✉ Send invite</button>
+                    <form th:action="@{/groups/{id}/invite(id=${group.id})}" method="post" class="scrapbook-form mt-3"
+                          onclick="event.stopPropagation()">
+                        <label class="scrapbook-label" th:for="'invite-' + ${group.id}" onclick="event.stopPropagation()">Invite by email</label>
+                        <input th:id="'invite-' + ${group.id}" type="email" name="email" placeholder="friend@example.com" class="scrapbook-input"
+                               onclick="event.stopPropagation()">
+                        <button type="submit" class="scrapbook-pill scrapbook-pill-pink scrapbook-button mt-3"
+                                onclick="event.stopPropagation()">✉ Send invite</button>
                     </form>
                 </div>
             </div>
@@ -90,15 +94,19 @@
                     </div>
 
                     <a th:href="@{/groups/{groupId}/prompts(groupId=${group.id})}"
+                       onclick="event.stopPropagation()"
                        class="scrapbook-pill scrapbook-pill-green scrapbook-link-button mb-3">
                         <span>✎</span>
                         <span>Start update</span>
                     </a>
 
-                    <form th:action="@{/groups/{id}/invite(id=${group.id})}" method="post" class="scrapbook-form mt-3">
-                        <label class="scrapbook-label" th:for="'invite-' + ${group.id}">Invite by email</label>
-                        <input th:id="'invite-' + ${group.id}" type="email" name="email" placeholder="friend@example.com" class="scrapbook-input">
-                        <button type="submit" class="scrapbook-pill scrapbook-pill-green scrapbook-button mt-3">✉ Send invite</button>
+                    <form th:action="@{/groups/{id}/invite(id=${group.id})}" method="post" class="scrapbook-form mt-3"
+                          onclick="event.stopPropagation()">
+                        <label class="scrapbook-label" th:for="'invite-' + ${group.id}" onclick="event.stopPropagation()">Invite by email</label>
+                        <input th:id="'invite-' + ${group.id}" type="email" name="email" placeholder="friend@example.com" class="scrapbook-input"
+                               onclick="event.stopPropagation()">
+                        <button type="submit" class="scrapbook-pill scrapbook-pill-green scrapbook-button mt-3"
+                                onclick="event.stopPropagation()">✉ Send invite</button>
                     </form>
                 </div>
             </div>
@@ -121,15 +129,19 @@
                     </div>
 
                     <a th:href="@{/groups/{groupId}/prompts(groupId=${group.id})}"
+                       onclick="event.stopPropagation()"
                        class="scrapbook-pill scrapbook-pill-green scrapbook-link-button mb-3">
                         <span>✎</span>
                         <span>Start update</span>
                     </a>
 
-                    <form th:action="@{/groups/{id}/invite(id=${group.id})}" method="post" class="scrapbook-form mt-3">
-                        <label class="scrapbook-label" th:for="'invite-' + ${group.id}">Invite by email</label>
-                        <input th:id="'invite-' + ${group.id}" type="email" name="email" placeholder="friend@example.com" class="scrapbook-input">
-                        <button type="submit" class="scrapbook-pill scrapbook-pill-green scrapbook-button mt-3">✉ Send invite</button>
+                    <form th:action="@{/groups/{id}/invite(id=${group.id})}" method="post" class="scrapbook-form mt-3"
+                          onclick="event.stopPropagation()">
+                        <label class="scrapbook-label" th:for="'invite-' + ${group.id}" onclick="event.stopPropagation()">Invite by email</label>
+                        <input th:id="'invite-' + ${group.id}" type="email" name="email" placeholder="friend@example.com" class="scrapbook-input"
+                               onclick="event.stopPropagation()">
+                        <button type="submit" class="scrapbook-pill scrapbook-pill-green scrapbook-button mt-3"
+                                onclick="event.stopPropagation()">✉ Send invite</button>
                     </form>
                 </div>
             </div>
