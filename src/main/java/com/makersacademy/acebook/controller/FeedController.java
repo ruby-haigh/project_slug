@@ -56,6 +56,8 @@ public class FeedController {
                     .orElseThrow(() -> new RuntimeException("No cycle"));
         }
 
+
+
         LocalDateTime start = cycle.getCycleStart();
         LocalDateTime end = start.plusWeeks(1);
 
@@ -84,6 +86,12 @@ public class FeedController {
 
         model.addAttribute("group", group);
         model.addAttribute("cycle", cycle);
+
+        String monthName = cycle.getCycleStart()
+                .getMonth()
+                .getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.ENGLISH);
+
+        model.addAttribute("monthName", monthName);
         model.addAttribute("newsletter", newsletter);
 
         return "feed";
