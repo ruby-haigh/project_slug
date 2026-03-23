@@ -1,0 +1,1 @@
+ALTER TABLE group_responses ADD COLUMN image_url VARCHAR(500);

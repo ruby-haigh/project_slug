@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <title>Prompt Form</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link th:href="@{/main.css}" rel="stylesheet">
+
 </head>
 <body>
 
@@ -12,7 +14,7 @@
 
 <div class="container scrapbook-shell mt-5">
     <h1 class="text-center scrapbook-title" th:text="'Prompt form for ' + ${group.name}">Prompt form</h1>
-    <p class="text-center scrapbook-subtitle">It’s time for your monthly update</p>
+    <p class="text-center scrapbook-subtitle">It's time for your monthly update</p>
 
     <div class="scrapbook-grid">
         <div class="circle-card scrapbook-card scrapbook-card-blue card-tilt-right">
@@ -25,9 +27,9 @@
 
                 <div th:if="${alreadySubmitted}" class="w-100 text-center">
                     <div class="scrapbook-message scrapbook-message-success">
-                        You’ve already submitted your update for this cycle.
+                        You've already submitted your update for this cycle.
                     </div>
-                    <p class="scrapbook-card-meta">You’re all set for this month.</p>
+                    <p class="scrapbook-card-meta">You're all set for this month.</p>
                     <div class="text-center mt-4">
                         <a th:href="@{/groups}" class="scrapbook-link">
                             <span>←</span>
@@ -39,7 +41,8 @@
                 <div th:unless="${alreadySubmitted}" class="w-100">
                     <p class="scrapbook-card-meta mb-4">Answer the prompts below and your responses will be saved to this cycle.</p>
 
-                    <form th:action="@{/groups/{groupId}/prompts(groupId=${groupId})}" method="post" class="scrapbook-form">
+                    <form th:action="@{/groups/{groupId}/prompts(groupId=${groupId})}" method="post"
+                          enctype="multipart/form-data" class="scrapbook-form">
                         <input type="hidden" name="groupCycleId" th:value="${groupCycleId}" />
 
                         <div th:each="prompt, iterStat : ${prompts}" class="mb-4">
@@ -47,11 +50,25 @@
                                 Prompt text goes here
                             </label>
                             <input type="hidden" name="promptIds" th:value="${prompt.id}" />
-                            <textarea
+                            <div class="position-relative mt-2">
+                                <textarea
                                     th:id="'response-' + ${iterStat.index}"
                                     name="responseTexts"
                                     class="scrapbook-input scrapbook-textarea"
                                     placeholder="Type your answer here"></textarea>
+                                    <label th:for="'image-' + ${iterStat.index}"
+                                           style="position: absolute; bottom: 10px; right: 10px; cursor: pointer;"
+                                           title="Add a photo">
+                                        <i class="bi bi-image" style="font-size: 1.2rem; color: #6c757d;"></i>
+                                    </label>
+                                    <input type="file"
+                                           th:id="'image-' + ${iterStat.index}"
+                                           name="images"
+                                           accept="image/*"
+                                           style="display: none;"
+                                           th:onchange="'showPreview(this, ' + ${iterStat.index} + ')'">
+                            </div>
+                            <div th:id="'preview-' + ${iterStat.index}" class="mt-1 small text-muted"></div>
                         </div>
 
                         <button type="submit" class="scrapbook-pill scrapbook-pill-peach scrapbook-button mt-3">
@@ -72,5 +89,17 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function showPreview(input, index) {
+        const preview = document.getElementById('preview-' + index);
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.innerHTML = '<img src="' + e.target.result + '" class="img-fluid rounded mt-1" style="max-height: 100px;"> <span class="text-success ms-2">✓ Image selected</span>';
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
 </body>
 </html>
