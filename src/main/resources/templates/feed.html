@@ -116,10 +116,10 @@
                 <span>New issue next month</span>
             </span>
 
-                <span class="feed-step-pill feed-step-pill-peach">
-                <span class="feed-step-icon">💔</span>
-                <span>Leave group</span>
-            </span>
+                <!--                Form to leave a group-->
+                <form th:action="@{/feed/{groupId}(groupId=${group.getId()})}" method="post">
+                    <button type="submit" class="feed-step-pill feed-step-pill-peach">💔 Leave group</button>
+                </form>
             </div>
 
         </div>
