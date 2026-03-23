@@ -36,17 +36,82 @@
         [[${iterStat.index == 0} ? 'card-tilt-1 tape-top-left tape-bottom-right' : '']]
         [[${iterStat.index == 1} ? 'card-tilt-2' : '']]">
 
-                <!-- Prompt -->
-                <h5 th:text="${entry.key.prompt}">Example Prompt</h5>
+            <!-- Prompt -->
+            <h5 th:text="${entry.key.prompt}">Example Prompt</h5>
 
-                <!-- Responses -->
-                <div th:each="response : ${entry.value}" class="mb-2 p-2 rounded" style="background:#f9f6ef;">
-                    <strong th:text="${response.userId}">User</strong> <!-- replace with name if you fetch user -->
-                    <p class="mb-0" th:text="${response.responseText}">Response</p>
+            <!-- Responses -->
+            <div th:each="response : ${entry.value}"
+                 class="mb-3 p-3 rounded"
+                 style="background:#f9f6ef;">
+
+                <!-- user -->
+                <strong th:text="${response.userId}">User</strong>
+
+                <!-- response text -->
+                <p class="mb-3" th:text="${response.responseText}">Response</p>
+
+                <!-- reactions footer -->
+                <div class="pt-2 border-top"
+                     style="border-color: rgba(0,0,0,0.08) !important;">
+
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
+
+                        <!-- heart -->
+                        <form th:action="@{/feed/{groupId}/responses/{responseId}/react(groupId=${group.id}, responseId=${response.id})}"
+                              method="post"
+                              style="display:inline;">
+                            <input type="hidden" name="emoji" value="❤️" />
+                            <button type="submit"
+                                    class="btn btn-sm border-0 px-2 py-1 shadow-none d-flex align-items-center gap-1 rounded"
+                                    th:classappend="${userReactionByResponse[response.id] == '❤️'}
+                        ? ' bg-light text-dark fw-semibold'
+                        : ' bg-transparent text-secondary'">
+                                <span>❤️</span>
+                                <span class="text-dark"
+                                      th:if="${reactionCountsByResponse[response.id]['❤️'] > 0}"
+                                      th:text="${reactionCountsByResponse[response.id]['❤️']}">1</span>
+                            </button>
+                        </form>
+
+                        <!-- laugh -->
+                        <form th:action="@{/feed/{groupId}/responses/{responseId}/react(groupId=${group.id}, responseId=${response.id})}"
+                              method="post"
+                              style="display:inline;">
+                            <input type="hidden" name="emoji" value="😂" />
+                            <button type="submit"
+                                    class="btn btn-sm border-0 px-2 py-1 shadow-none d-flex align-items-center gap-1 rounded"
+                                    th:classappend="${userReactionByResponse[response.id] == '😂'}
+                        ? ' bg-light text-dark fw-semibold'
+                        : ' bg-transparent text-secondary'">
+                                <span>😂</span>
+                                <span class="text-dark"
+                                      th:if="${reactionCountsByResponse[response.id]['😂'] > 0}"
+                                      th:text="${reactionCountsByResponse[response.id]['😂']}">1</span>
+                            </button>
+                        </form>
+
+                        <!-- thumbs up -->
+                        <form th:action="@{/feed/{groupId}/responses/{responseId}/react(groupId=${group.id}, responseId=${response.id})}"
+                              method="post"
+                              style="display:inline;">
+                            <input type="hidden" name="emoji" value="👍" />
+                            <button type="submit"
+                                    class="btn btn-sm border-0 px-2 py-1 shadow-none d-flex align-items-center gap-1 rounded"
+                                    th:classappend="${userReactionByResponse[response.id] == '👍'}
+                        ? ' bg-light text-dark fw-semibold'
+                        : ' bg-transparent text-secondary'">
+                                <span>👍</span>
+                                <span class="text-dark"
+                                      th:if="${reactionCountsByResponse[response.id]['👍'] > 0}"
+                                      th:text="${reactionCountsByResponse[response.id]['👍']}">1</span>
+                            </button>
+                        </form>
+
+                    </div>
                 </div>
+            </div>
         </div>
     </div>
-
 
     <div class="feed-info-card text-center mx-auto">
 
