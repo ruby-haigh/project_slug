@@ -1030,6 +1030,15 @@ h6 {
 
 
 /* Disabled group cards */
+.clickable-card {
+    cursor: pointer;
+}
+
+.clickable-card .scrapbook-pill:not(.scrapbook-link-button):not(.scrapbook-button),
+.clickable-card .home-card-pill {
+    cursor: default;
+}
+
 .disabled-card {
     opacity: 0.6;
     cursor: not-allowed;
