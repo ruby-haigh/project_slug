@@ -83,7 +83,15 @@ public class PromptController {
 
         GroupCycle currentCycle;
         if (optionalCycle.isEmpty()) {
-            currentCycle = new GroupCycle(groupId, now, now.plusDays(30));
+            long cycleLengthDays;
+
+            if (group.getFrequency() != null && group.getFrequency().equalsIgnoreCase("FORTNIGHTLY")) {
+                cycleLengthDays = 14;
+            } else {
+                cycleLengthDays = 30;
+            }
+
+            currentCycle = new GroupCycle(groupId, now, now.plusDays(cycleLengthDays));
             currentCycle = groupCycleRepository.save(currentCycle);
         } else {
             currentCycle = optionalCycle.get();
