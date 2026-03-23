@@ -48,6 +48,9 @@ public class GroupCycle {
     @Column(name = "spotify_playlist_url")
     private String spotifyPlaylistUrl;
 
+    @Column(name = "feed_email_sent_at")
+    private LocalDateTime feedEmailSentAt;
+
     public GroupCycle(Long groupId, LocalDateTime cycleStart, LocalDateTime cycleEnd) {
         this.groupId = groupId;
         this.cycleStart = cycleStart;

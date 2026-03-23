@@ -62,8 +62,16 @@ public class FeedController {
                     .orElseThrow(() -> new RuntimeException("No cycle"));
         }
 
+        LocalDateTime start = cycle.getCycleStart();
+        LocalDateTime end = start.plusWeeks(1);
+
+        boolean feedLocked = LocalDateTime.now().isBefore(end);
+
+        model.addAttribute("feedLocked", feedLocked);
+        model.addAttribute("unlockTime", end);
+
         List<GroupResponse> responses =
-                groupResponseRepository.findByGroupCycleId(cycle.getId());
+                groupResponseRepository.findResponsesForFirstWeek(cycle.getId(), start, end);
 
         Set<String> soundtrackLinks = new LinkedHashSet<>();
         for (GroupResponse response : responses) {
@@ -77,12 +85,20 @@ public class FeedController {
             }
         }
 
-        Map<Prompt, List<GroupResponse>> newsletter = new LinkedHashMap<>();
+        Map<Prompt, List<Map<String, Object>>> newsletter = new LinkedHashMap<>();
+
         for (GroupResponse r : responses) {
             Prompt prompt = promptRepository.findById(r.getPromptId()).orElseThrow();
-            newsletter.computeIfAbsent(prompt, k -> new ArrayList<>()).add(r);
-        }
 
+            Map<String, Object> responseData = new LinkedHashMap<>();
+            responseData.put("responseText", r.getResponseText());
+            responseData.put("userId", r.getUserId());
+            responseData.put("userName", r.getUser() != null ? r.getUser().getName() : null);
+            responseData.put("imageUrl", r.getImageUrl());
+            responseData.put("spotifyTrackUrl", r.getSpotifyTrackUrl());
+
+            newsletter.computeIfAbsent(prompt, k -> new ArrayList<>()).add(responseData);
+        }
 
         model.addAttribute("group", group);
         model.addAttribute("cycle", cycle);
