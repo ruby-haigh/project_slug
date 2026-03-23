@@ -60,16 +60,28 @@ public class FeedReadyEmailService {
     }
 
     public int sendFeedReadyEmailsForLatestCycle(Long groupId) {
+        return sendFeedReadyEmailsForLatestCycle(groupId, false);
+    }
+
+    public int sendFeedReadyEmailsForLatestCycle(Long groupId, boolean force) {
         GroupCycle cycle = groupCycleRepository.findTopByGroupIdOrderByCycleStartDesc(groupId)
                 .orElseThrow(() -> new RuntimeException("No cycle found for this group yet."));
-        return sendFeedReadyEmailsForCycle(cycle.getId());
+        return sendFeedReadyEmailsForCycle(cycle.getId(), force);
     }
 
     public int sendFeedReadyEmailsForCycle(Long cycleId) {
+        return sendFeedReadyEmailsForCycle(cycleId, false);
+    }
+
+    public int sendFeedReadyEmailsForCycle(Long cycleId, boolean force) {
         GroupCycle cycle = groupCycleRepository.findById(cycleId).orElseThrow();
         Group group = groupRepository.findById(cycle.getGroupId()).orElseThrow();
 
         if (!groupResponseRepository.existsByGroupCycleId(cycle.getId())) {
+            return 0;
+        }
+
+        if (!force && cycle.getFeedEmailSentAt() != null) {
             return 0;
         }
 
@@ -95,13 +107,15 @@ public class FeedReadyEmailService {
                 continue;
             }
 
-            emailService.sendFeedReadyEmail(
+            boolean sent = emailService.sendFeedReadyEmail(
                     emailAddress,
                     group.getName(),
                     frequencyLabel,
                     feedLink
             );
-            recipients++;
+            if (sent) {
+                recipients++;
+            }
         }
 
         if (recipients > 0) {

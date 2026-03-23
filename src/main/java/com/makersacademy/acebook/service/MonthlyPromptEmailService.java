@@ -108,13 +108,15 @@ public class MonthlyPromptEmailService {
                 continue;
             }
 
-            emailService.sendPromptFormEmail(
+            boolean sent = emailService.sendPromptFormEmail(
                     emailAddress,
                     group.getName(),
                     frequencyLabel,
                     promptFormLink
             );
-            recipients++;
+            if (sent) {
+                recipients++;
+            }
         }
 
         return recipients;
