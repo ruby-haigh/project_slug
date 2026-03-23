@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -41,9 +42,22 @@ public class GroupCycle {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @Column(name = "spotify_playlist_id")
+    private String spotifyPlaylistId;
+
+    @Column(name = "spotify_playlist_url")
+    private String spotifyPlaylistUrl;
+
     public GroupCycle(Long groupId, LocalDateTime cycleStart, LocalDateTime cycleEnd) {
         this.groupId = groupId;
         this.cycleStart = cycleStart;
         this.cycleEnd = cycleEnd;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
     }
 }

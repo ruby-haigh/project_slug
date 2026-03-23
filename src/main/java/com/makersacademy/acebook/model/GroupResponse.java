@@ -47,6 +47,9 @@ public class GroupResponse {
     @Column(name = "image_url")
     private String imageUrl;
 
+    @Column(name = "spotify_track_url")
+    private String spotifyTrackUrl;
+
     public GroupResponse(Long groupCycleId, Long groupId, Long userId, Long promptId, String responseText) {
         this.groupCycleId = groupCycleId;
         this.groupId = groupId;

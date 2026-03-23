@@ -1077,6 +1077,100 @@ h6 {
     border-color: rgba(122, 155, 142, 0.45);
 }
 
+.feed-soundtrack-card {
+    padding: 1.2rem 1.3rem;
+    border-radius: 28px;
+    background: linear-gradient(180deg, #eef4ef 0%, #e0ece4 100%);
+    border: 1px solid rgba(122, 155, 142, 0.18);
+    box-shadow: 0 14px 30px rgba(95, 87, 78, 0.08);
+}
+
+.feed-soundtrack-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    cursor: pointer;
+    list-style: none;
+}
+
+.feed-soundtrack-summary::-webkit-details-marker {
+    display: none;
+}
+
+.feed-soundtrack-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+}
+
+.feed-soundtrack-icon {
+    font-size: 2rem;
+    line-height: 1;
+    color: #6d9584;
+}
+
+.feed-soundtrack-title {
+    display: block;
+    font-size: 1.15rem;
+    color: #3f3d3b;
+    margin-bottom: 0.25rem;
+}
+
+.feed-soundtrack-text {
+    color: rgba(58, 58, 58, 0.64);
+    font-size: 0.96rem;
+}
+
+.feed-soundtrack-chevron {
+    font-size: 1.6rem;
+    color: #6d9584;
+    line-height: 1;
+    transition: transform 0.2s ease;
+}
+
+.feed-soundtrack-card[open] .feed-soundtrack-chevron {
+    transform: rotate(180deg);
+}
+
+.feed-soundtrack-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(122, 155, 142, 0.14);
+}
+
+.feed-soundtrack-link {
+    display: block;
+    padding: 0.95rem 1.1rem;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.78);
+    color: #3f3d3b;
+    text-decoration: none;
+    box-shadow: 0 8px 18px rgba(95, 87, 78, 0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.feed-soundtrack-link:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 22px rgba(95, 87, 78, 0.1);
+    color: #3f3d3b;
+}
+
+.feed-soundtrack-link-title {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+}
+
+.feed-soundtrack-link-artist {
+    display: block;
+    color: rgba(58, 58, 58, 0.65);
+    font-size: 0.94rem;
+}
+
 
 /* Feed */
 .feed-info-card {

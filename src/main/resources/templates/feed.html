@@ -18,6 +18,31 @@
     <!-- Group name -->
     <h1 class="fw-bold mb-2" th:text="${group.name}">Group Name</h1>
 
+    <details th:if="${!#lists.isEmpty(soundtrackLinks)}" class="feed-soundtrack-card mb-4">
+        <summary class="feed-soundtrack-summary">
+            <div class="feed-soundtrack-header">
+                <span class="feed-soundtrack-icon">♫</span>
+                <div>
+                    <strong class="feed-soundtrack-title">Issue soundtrack</strong>
+                    <p class="feed-soundtrack-text mb-0">Songs shared in this issue, all in one place.</p>
+                </div>
+            </div>
+            <span class="feed-soundtrack-chevron">⌄</span>
+        </summary>
+
+        <div class="feed-soundtrack-links">
+            <a th:each="track : ${soundtrackLinks}"
+               th:href="${track.url}"
+               target="_blank"
+               rel="noopener"
+               class="feed-soundtrack-link">
+                <span class="feed-soundtrack-link-title" th:text="${track.title}">Song title</span>
+                <span class="feed-soundtrack-link-artist" th:if="${track.artist != null and !track.artist.isBlank()}"
+                      th:text="${track.artist}">Artist</span>
+            </a>
+        </div>
+    </details>
+
     <!-- Members -->
     <p class="text-muted mb-4">
         <span th:if="${group.members != null}" th:each="membership : ${group.members}"
@@ -42,7 +67,24 @@
                 <!-- Responses -->
                 <div th:each="response : ${entry.value}" class="mb-2 p-2 rounded" style="background:#f9f6ef;">
                     <strong th:text="${response.userId}">User</strong>
-                    <p class="mb-0" th:text="${response.responseText}">Response</p>
+                    <p th:if="${response.spotifyTrackUrl == null and !(response.responseText != null and #strings.contains(response.responseText, 'open.spotify.com/track/'))}"
+                       class="mb-0" th:text="${response.responseText}">Response</p>
+                    <p th:if="${response.spotifyTrackUrl != null or (response.responseText != null and #strings.contains(response.responseText, 'open.spotify.com/track/'))}"
+                       class="mb-0">Shared a song for this issue.</p>
+                    <a th:if="${response.spotifyTrackUrl != null}"
+                       th:href="${response.spotifyTrackUrl}"
+                       target="_blank"
+                       rel="noopener"
+                       class="d-inline-block mt-2">
+                        Open song in Spotify
+                    </a>
+                    <a th:if="${response.spotifyTrackUrl == null and response.responseText != null and #strings.contains(response.responseText, 'open.spotify.com/track/')}"
+                       th:href="${response.responseText}"
+                       target="_blank"
+                       rel="noopener"
+                       class="d-inline-block mt-2">
+                        Open song in Spotify
+                    </a>
                     <img th:if="${response.imageUrl != null}"
                          th:src="${response.imageUrl}"
                          alt="Response image"
