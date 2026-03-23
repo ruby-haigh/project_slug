@@ -102,7 +102,7 @@ public class GroupController {
 
         monthlyPromptEmailService.sendPromptEmailsForGroup(group.getId());
 
-        return "redirect:/groups"; // back to dashboard
+        return "redirect:/groups?createdGroupId=" + group.getId();
     }
 
 
