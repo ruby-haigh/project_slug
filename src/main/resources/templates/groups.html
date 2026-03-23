@@ -29,6 +29,10 @@
         </a>
     </div>
 
+    <div th:if="${param.createdGroupId != null}" class="scrapbook-message scrapbook-message-success text-center mb-4">
+        Circle created successfully. Your new group is ready below.
+    </div>
+
     <!-- No groups -->
     <div th:if="${#lists.isEmpty(groups)}" class="text-center mt-5 scrapbook-panel scrapbook-empty-state">
         <p class="text-muted">You're not in any circles yet 💌</p>
@@ -38,8 +42,9 @@
     <div th:if="${!#lists.isEmpty(groups)}" class="scrapbook-grid">
         <th:block th:each="group, iterStat : ${groups}">
             <div class="circle-card scrapbook-card scrapbook-card-peach card-tilt-left"
+                 th:id="'group-card-' + ${group.id}"
                  th:if="${iterStat.index % 3 == 0}"
-                 th:classappend="${hasFeedMap[group.id]} ? ' clickable-card' : ' disabled-card'"
+                 th:classappend="(${hasFeedMap[group.id]} ? ' clickable-card' : ' disabled-card') + (${param.createdGroupId != null and param.createdGroupId[0] == #strings.toString(group.id)} ? ' created-card' : '')"
                  th:onclick="${hasFeedMap[group.id]} ? 'window.location.href=\'/feed/' + ${group.id} + '\''">
                 <div class="scrapbook-card-body">
                     <div class="scrapbook-illustration">
@@ -68,8 +73,9 @@
             </div>
 
             <div class="circle-card scrapbook-card scrapbook-card-blue card-tilt-right"
+                 th:id="'group-card-' + ${group.id}"
                  th:if="${iterStat.index % 3 == 1}"
-                 th:classappend="${hasFeedMap[group.id]} ? ' clickable-card' : ' disabled-card'"
+                 th:classappend="(${hasFeedMap[group.id]} ? ' clickable-card' : ' disabled-card') + (${param.createdGroupId != null and param.createdGroupId[0] == #strings.toString(group.id)} ? ' created-card' : '')"
                  th:onclick="${hasFeedMap[group.id]} ? 'window.location.href=\'/feed/' + ${group.id} + '\''">
                 <div class="scrapbook-card-body">
                     <div class="scrapbook-illustration">
@@ -98,8 +104,9 @@
             </div>
 
             <div class="circle-card scrapbook-card scrapbook-card-pink card-tilt-left"
+                 th:id="'group-card-' + ${group.id}"
                  th:if="${iterStat.index % 3 == 2}"
-                 th:classappend="${hasFeedMap[group.id]} ? ' clickable-card' : ' disabled-card'"
+                 th:classappend="(${hasFeedMap[group.id]} ? ' clickable-card' : ' disabled-card') + (${param.createdGroupId != null and param.createdGroupId[0] == #strings.toString(group.id)} ? ' created-card' : '')"
                  th:onclick="${hasFeedMap[group.id]} ? 'window.location.href=\'/feed/' + ${group.id} + '\''">
                 <div class="scrapbook-card-body">
                     <div class="scrapbook-illustration">
@@ -132,5 +139,16 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const createdGroupId = params.get('createdGroupId');
+
+    if (createdGroupId) {
+        const createdCard = document.getElementById(`group-card-${createdGroupId}`);
+        if (createdCard) {
+            createdCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+</script>
 </body>
 </html>
