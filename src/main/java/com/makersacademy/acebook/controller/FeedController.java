@@ -1,16 +1,14 @@
 package com.makersacademy.acebook.controller;
 
 import com.makersacademy.acebook.model.*;
-import com.makersacademy.acebook.repository.GroupCycleRepository;
-import com.makersacademy.acebook.repository.GroupRepository;
-import com.makersacademy.acebook.repository.GroupResponseRepository;
-import com.makersacademy.acebook.repository.PromptRepository;
+import com.makersacademy.acebook.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -33,6 +31,12 @@ public class FeedController {
 
     @Autowired
     private PromptRepository promptRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private GroupMembershipRepository membershipRepository;
 
     @GetMapping("/{groupId}")
     public String showFeed(@PathVariable Long groupId, Model model) {
@@ -58,5 +62,15 @@ public class FeedController {
         model.addAttribute("newsletter", newsletter);
 
         return "feed";
+    }
+
+    @PostMapping("/{groupId}")
+    public RedirectView leaveGroup(@AuthenticationPrincipal DefaultOidcUser oidcUser, @PathVariable Long groupId) {
+        String email = oidcUser.getEmail();
+        User user = userRepository.findUserByEmail(email).get();
+        Group group = groupRepository.findById(groupId).get();
+        GroupMembership groupMembership = membershipRepository.findByUserAndGroup(user, group).get();
+        membershipRepository.delete(groupMembership);
+        return new RedirectView("/");
     }
 }
