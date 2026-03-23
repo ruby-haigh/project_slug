@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ public class FeedController {
     private PromptRepository promptRepository;
 
     @GetMapping("/{groupId}")
-    public String showFeed(@PathVariable Long groupId, Model model) {
+    public String showFeed(@PathVariable Long groupId, Model model, RedirectAttributes redirectAttributes) {
 
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new RuntimeException("Group not found"));
@@ -44,15 +45,30 @@ public class FeedController {
                 .findCurrentCycleByGroupId(groupId, LocalDateTime.now())
                 .orElseThrow(() -> new RuntimeException("No cycle"));
 
-        List<GroupResponse> responses =
-                groupResponseRepository.findByGroupCycleId(cycle.getId());
+        LocalDateTime start = cycle.getCycleStart();
+        LocalDateTime end = start.plusWeeks(1);
 
-        Map<Prompt, List<GroupResponse>> newsletter = new LinkedHashMap<>();
+        boolean feedLocked = LocalDateTime.now().isBefore(end);
+
+        model.addAttribute("feedLocked", feedLocked);
+        model.addAttribute("unlockTime", end);
+
+        List<GroupResponse> responses =
+                groupResponseRepository.findResponsesForFirstWeek(cycle.getId(), start, end);
+
+        Map<Prompt, List<Map<String, Object>>> newsletter = new LinkedHashMap<>();
+
         for (GroupResponse r : responses) {
             Prompt prompt = promptRepository.findById(r.getPromptId()).orElseThrow();
-            newsletter.computeIfAbsent(prompt, k -> new ArrayList<>()).add(r);
-        }
 
+            // create a small map with response + user info
+            Map<String, Object> responseData = new LinkedHashMap<>();
+            responseData.put("responseText", r.getResponseText());
+            responseData.put("userId", r.getUserId());
+            responseData.put("userName", r.getUser().getName());
+
+            newsletter.computeIfAbsent(prompt, k -> new ArrayList<>()).add(responseData);
+        }
 
         model.addAttribute("group", group);
         model.addAttribute("newsletter", newsletter);

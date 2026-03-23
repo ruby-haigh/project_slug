@@ -32,6 +32,10 @@ public class GroupResponse {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    private User user;
+
     // The prompt this answer is for
     @Column(name = "prompt_id", nullable = false)
     private Long promptId;
@@ -44,14 +48,19 @@ public class GroupResponse {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+<<<<<<< Updated upstream
     @Column(name = "image_url")
     private String imageUrl;
 
     public GroupResponse(Long groupCycleId, Long groupId, Long userId, Long promptId, String responseText) {
+=======
+    public GroupResponse(Long groupCycleId, Long groupId, Long userId, Long promptId, String responseText, LocalDateTime createdAt) {
+>>>>>>> Stashed changes
         this.groupCycleId = groupCycleId;
         this.groupId = groupId;
         this.userId = userId;
         this.promptId = promptId;
         this.responseText = responseText;
+        this.createdAt = createdAt;
     }
 }

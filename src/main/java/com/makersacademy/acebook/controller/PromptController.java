@@ -161,7 +161,16 @@ public class PromptController {
 
             // Create a new response object with the cycle, group, user and prompt context
             GroupResponse response = new GroupResponse(
+<<<<<<< Updated upstream
                     groupCycleId, groupId, userId, promptId, responseText
+=======
+                    groupCycleId,
+                    groupId,
+                    userId,
+                    promptId,
+                    responseText,
+                    LocalDateTime.now()
+>>>>>>> Stashed changes
             );
 
             // Upload image to Cloudinary if one was provided for this prompt
