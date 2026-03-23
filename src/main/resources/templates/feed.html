@@ -62,10 +62,14 @@
         <p>No responses yet 💌</p>
     </div>
 
-    <div th:each="entry : ${newsletter}" class="mb-4">
-        <div class="feed-card
-             [[${iterStat.index == 0} ? 'card-tilt-1 tape-top-left tape-bottom-right' : '']]
-        [[${iterStat.index == 1} ? 'card-tilt-2' : '']]">
+    <div th:each="entry, iterStat : ${newsletter}"
+         class="feed-card mb-4"
+         th:classappend="
+        ${iterStat.index == 0 ? ' card-tilt-1 tape-top-left tape-bottom-right' :
+        iterStat.index == 1 ? ' card-tilt-2' :
+        iterStat.index == 2 ? ' card-tilt-3' :
+        iterStat.index == 3 ? ' card-tilt-4' :
+        ''}">
 
                 <!-- Prompt -->
                 <h5 th:text="${entry.key.prompt}">Example Prompt</h5>
