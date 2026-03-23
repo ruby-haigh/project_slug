@@ -5,6 +5,7 @@ import com.makersacademy.acebook.repository.GroupCycleRepository;
 import com.makersacademy.acebook.repository.GroupRepository;
 import com.makersacademy.acebook.repository.GroupResponseRepository;
 import com.makersacademy.acebook.repository.PromptRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,18 +22,18 @@ import java.util.Map;
 @RequestMapping("/feed")
 public class FeedController {
 
-    private final GroupRepository groupRepository;
-    private final GroupCycleRepository groupCycleRepository;
-    private final GroupResponseRepository groupResponseRepository;
-    private final PromptRepository promptRepository;
+    @Autowired
+    private GroupRepository groupRepository;
 
-    public FeedController(GroupRepository groupRepository, GroupCycleRepository groupCycleRepository, GroupResponseRepository groupResponseRepository, PromptRepository promptRepository) {
-        this.groupRepository = groupRepository;
-        this.groupCycleRepository = groupCycleRepository;
-        this.groupResponseRepository = groupResponseRepository;
-        this.promptRepository = promptRepository;
+    @Autowired
+    private GroupCycleRepository groupCycleRepository;
 
-    }
+    @Autowired
+    private GroupResponseRepository groupResponseRepository;
+
+    @Autowired
+    private PromptRepository promptRepository;
+
     @GetMapping("/{groupId}")
     public String showFeed(@PathVariable Long groupId, Model model) {
 

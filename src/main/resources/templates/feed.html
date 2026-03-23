@@ -31,9 +31,10 @@
         <p>No responses yet 💌</p>
     </div>
 
-    <div th:each="entry : ${newsletter}" class="mb-4">
-        <div class="card border-0 shadow-sm">
-            <div class="card-body px-4 py-3">
+    <div th:each="entry, iterStat : ${newsletter}" class="mb-4">
+        <div class="feed-card
+        [[${iterStat.index == 0} ? 'card-tilt-1 tape-top-left tape-bottom-right' : '']]
+        [[${iterStat.index == 1} ? 'card-tilt-2' : '']]">
 
                 <!-- Prompt -->
                 <h5 th:text="${entry.key.prompt}">Example Prompt</h5>
@@ -43,8 +44,40 @@
                     <strong th:text="${response.userId}">User</strong> <!-- replace with name if you fetch user -->
                     <p class="mb-0" th:text="${response.responseText}">Response</p>
                 </div>
+        </div>
+    </div>
 
+
+    <div class="feed-info-card text-center mx-auto">
+
+        <div class="feed-info-doodle feed-info-doodle-heart">♡</div>
+        <div class="feed-info-doodle feed-info-doodle-star">✧</div>
+
+        <div class="feed-info-inner">
+
+            <h5 class="feed-info-title">That’s a wrap</h5>
+
+            <p class="feed-info-text">
+                <span th:text="'A little snapshot of ' + ${group.name} + '\'s month 💌'"></span>
+            </p>
+
+            <div class="feed-info-actions">
+            <span class="feed-step-pill feed-step-pill-blue">
+                <span class="feed-step-icon">✉</span>
+                <span>Next prompts soon</span>
+            </span>
+
+                <span class="feed-step-pill feed-step-pill-peach">
+                <span class="feed-step-icon">✎</span>
+                <span>Write again</span>
+            </span>
+
+                <span class="feed-step-pill feed-step-pill-pink">
+                <span class="feed-step-icon">☰</span>
+                <span>New issue next month</span>
+            </span>
             </div>
+
         </div>
     </div>
 
