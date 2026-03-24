@@ -2,6 +2,7 @@ package com.makersacademy.acebook.controller;
 
 import com.makersacademy.acebook.model.User;
 import com.makersacademy.acebook.repository.UserRepository;
+import com.makersacademy.acebook.service.UserProfileStatsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,6 +26,9 @@ public class UsersController {
 
     @Autowired
     CloudinaryService cloudinaryService;
+
+    @Autowired
+    UserProfileStatsService userProfileStatsService;
 
     @GetMapping("/users/after-login")
     public RedirectView afterLogin(HttpSession session) {
@@ -72,12 +76,12 @@ public class UsersController {
 
     @PostMapping("/users/setup")
     public RedirectView setupAccount(@RequestParam String name,
-                                     @RequestParam Integer age,
+                                     @RequestParam String dateOfBirth,
                                      @RequestParam String phoneNumber,
                                      HttpSession session) {
         User user = getCurrentUser();
         user.setName(name);
-        user.setAge(age);
+        user.setDateOfBirth(java.time.LocalDate.parse(dateOfBirth));
         user.setPhoneNumber(phoneNumber);
         userRepository.save(user);
 
@@ -122,23 +126,21 @@ public class UsersController {
 
     @GetMapping("/users/{id}")
     public String account(@PathVariable Long id, Model model, @AuthenticationPrincipal DefaultOidcUser oidcUser) {
-        Optional<User> urlPathUser = userRepository.findById(id);
+        User viewedUser = userRepository.findById(id).orElseThrow();
+        User currentUser = userRepository.findUserByEmail(oidcUser.getEmail()).orElseThrow();
 
-        Optional<User> user = userRepository.findUserByEmail(oidcUser.getEmail());
-
-        boolean isCorrectUser = urlPathUser.get().getId() == user.get().getId();
-
-        if (!isCorrectUser) {
-            throw new RuntimeException("Incorrect user");
-        }
-
-        model.addAttribute("user", user.get());
+        model.addAttribute("user", viewedUser);
+        model.addAttribute("isOwnProfile", viewedUser.getId().equals(currentUser.getId()));
+        model.addAttribute("profileStats", userProfileStatsService.buildStats(viewedUser));
 
         return "account/account";
     }
 
     @GetMapping("/users/{id}/edit")
     public String editAccountForm(@PathVariable Long id, Model model) {
+        if (!getCurrentUser().getId().equals(id)) {
+            throw new RuntimeException("Incorrect user");
+        }
         Optional<User> user = userRepository.findById(id);
         model.addAttribute("user", user.get());
         return "account/edit-account-form";
@@ -146,13 +148,16 @@ public class UsersController {
 
     @PostMapping("/users/{id}/edit")
     public RedirectView updateAccount(@RequestParam String name,
-                                      @RequestParam Integer age,
+                                      @RequestParam String dateOfBirth,
                                       @RequestParam String phoneNumber,
                                       @RequestParam String bio,
                                       @PathVariable Long id) {
+        if (!getCurrentUser().getId().equals(id)) {
+            throw new RuntimeException("Incorrect user");
+        }
         Optional <User> currentUser = userRepository.findById(id);
         currentUser.get().setName(name);
-        currentUser.get().setAge(age);
+        currentUser.get().setDateOfBirth(java.time.LocalDate.parse(dateOfBirth));
         currentUser.get().setPhoneNumber(phoneNumber);
         currentUser.get().setBio(bio);
         userRepository.save(currentUser.get());

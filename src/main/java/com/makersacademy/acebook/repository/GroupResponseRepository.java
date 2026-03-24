@@ -20,6 +20,7 @@ public interface GroupResponseRepository extends JpaRepository<GroupResponse, Lo
     boolean existsByGroupId(Long groupId);
     // Check if a user has already submitted responses in this cycle
     boolean existsByGroupCycleIdAndUserId(Long groupCycleId, Long userId);
+    List<GroupResponse> findByUserId(Long userId);
 
     @Query("""
         SELECT gr
@@ -30,6 +31,19 @@ public interface GroupResponseRepository extends JpaRepository<GroupResponse, Lo
     """)
     List<GroupResponse> findResponsesForFirstWeek(
             @Param("cycleId") Long cycleId,
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end
+    );
+
+    @Query("""
+        SELECT COUNT(DISTINCT gr.groupCycleId)
+        FROM GroupResponse gr
+        WHERE gr.userId = :userId
+        AND gr.createdAt >= :start
+        AND gr.createdAt < :end
+    """)
+    long countDistinctSubmittedCyclesInWindow(
+            @Param("userId") Long userId,
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end
     );

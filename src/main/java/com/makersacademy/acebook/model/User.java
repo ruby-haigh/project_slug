@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import static java.lang.Boolean.TRUE;
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -18,7 +18,10 @@ public class User {
     private Long id;
     private String email;
     private String name;
-    private Integer age;
+
+    @Column(name = "date_of_birth")
+    private LocalDate dateOfBirth;
+
     @Column(name = "phone_number")
     private String phoneNumber;
     private String bio;
@@ -32,7 +35,7 @@ public class User {
 
     public boolean isProfileComplete() {
         return name != null && !name.isBlank()
-                && age != null
+                && dateOfBirth != null
                 && phoneNumber != null && !phoneNumber.isBlank();
     }
 

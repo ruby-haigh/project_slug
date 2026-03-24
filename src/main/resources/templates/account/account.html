@@ -11,45 +11,71 @@
 <body>
 <div th:replace="fragments/navbar :: navbar"></div>
 
-<div class="container mt-5 account-shell" style="max-width: 620px;">
+<div class="container mt-5 account-shell account-profile-shell" style="max-width: 1080px;">
 
-    <div class="account-heading mb-4">
-        <span class="account-kicker">Profile</span>
-        <h2 class="fw-bold mb-1">My Account</h2>
-        <p id="user-email" class="text-muted mb-0" th:text="${user.email}"></p>
+    <div class="account-hero mb-5">
+        <div class="account-hero-avatar-wrap">
+            <div class="account-hero-sparkle account-hero-sparkle-left">✧</div>
+            <div class="account-hero-sparkle account-hero-sparkle-right">✦</div>
+            <div class="account-hero-heart">♡</div>
+            <label for="profilePicInput" class="account-hero-avatar-label">
+                <img th:src="${user.profilePictureUrl} ?: 'https://ui-avatars.com/api/?name=' + ${user.email?.substring(0,1)} + '&background=' + ${user.avatarColour} + '&color=666&rounded=true&size=180'"
+                     alt="Profile picture"
+                     class="rounded-circle account-hero-avatar"
+                     style="width: 180px; height: 180px; object-fit: cover;">
+                <div class="account-hero-camera" th:if="${isOwnProfile}">
+                    <i class="bi bi-camera-fill text-white" style="font-size: 13px;"></i>
+                </div>
+            </label>
+            <form id="profilePicForm" action="/users/profile-picture" method="post" enctype="multipart/form-data" th:if="${isOwnProfile}">
+                <input type="file" id="profilePicInput" name="file" accept="image/*" style="display: none;"
+                       onchange="document.getElementById('profilePicForm').submit()">
+            </form>
+        </div>
+
+        <div class="account-hero-copy">
+            <span class="account-kicker">Profile</span>
+            <h1 class="account-hero-title mb-2" th:if="${isOwnProfile}">Your Profile</h1>
+            <h1 class="account-hero-title mb-2" th:unless="${isOwnProfile}" th:text="|${user.name}'s Profile|">Their Profile</h1>
+            <div class="account-hero-underline"></div>
+            <p id="user-email" class="text-muted mb-0 mt-3" th:if="${isOwnProfile}" th:text="${user.email}"></p>
+            <p id="user-email" class="text-muted mb-0 mt-3" th:unless="${isOwnProfile}">A little snapshot of their Snail Mail life</p>
+        </div>
+    </div>
+
+    <div class="account-stats-row mb-4">
+        <div class="account-stat-card account-stat-card-green">
+            <div class="account-stat-icon account-stat-icon-green">◎</div>
+            <div class="account-stat-number" th:text="${profileStats.circleCount}">0</div>
+            <div class="account-stat-label">Circles</div>
+        </div>
+        <div class="account-stat-card account-stat-card-peach">
+            <div class="account-stat-icon account-stat-icon-peach">✎</div>
+            <div class="account-stat-number" th:text="${profileStats.updateCount}">0</div>
+            <div class="account-stat-label">Updates</div>
+        </div>
+        <div class="account-stat-card account-stat-card-pink">
+            <div class="account-stat-icon account-stat-icon-pink">🔥</div>
+            <div class="account-stat-number" th:text="${profileStats.streakCount}">0</div>
+            <div class="account-stat-label">Month streak</div>
+        </div>
     </div>
 
     <!--profile info -->
-    <div class="card border-0 shadow-sm mb-4 account-card">
+    <div class="card border-0 shadow-sm mb-4 account-card account-profile-card">
         <div class="card-body px-4 py-4">
             <h6 class="text-uppercase text-muted fw-semibold small mb-3">Profile</h6>
-
-            <!--profile pic-->
-            <div class="mb-4 text-center" style="position: relative; display: inline-block;">
-                <label for="profilePicInput" style="cursor: pointer;">
-                    <img th:src="${user.profilePictureUrl} ?: 'https://ui-avatars.com/api/?name=' + ${user.email?.substring(0,1)} + '&background=' + ${user.avatarColour} + '&color=666&rounded=true&size=80'"
-                         alt="Profile picture"
-                         class="rounded-circle account-avatar"
-                         style="width: 80px; height: 80px; object-fit: cover;">
-                    <div style="position: absolute; bottom: 0; right: 0; background: #198754; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border: 2px solid white;">
-                        <i class="bi bi-camera-fill text-white" style="font-size: 13px;"></i>
-                    </div>
-                </label>
-                <form id="profilePicForm" action="/users/profile-picture" method="post" enctype="multipart/form-data">
-                    <input type="file" id="profilePicInput" name="file" accept="image/*" style="display: none;"
-                           onchange="document.getElementById('profilePicForm').submit()">
-                </form>
-            </div>
 
             <div class="account-detail-row">
                 <span class="text-muted small">Name</span>
                 <p class="fw-semibold mb-0" th:text="${user.name} ?: 'Not set'"></p>
             </div>
-            <div class="account-detail-row">
-                <span class="text-muted small">Age</span>
-                <p class="fw-semibold mb-0" th:text="${user.age} ?: 'Not set'"></p>
+            <div class="account-detail-row" th:if="${isOwnProfile}">
+                <span class="text-muted small">Date of Birth</span>
+                <p class="fw-semibold mb-0"
+                   th:text="${user.dateOfBirth != null ? #temporals.format(user.dateOfBirth, 'd MMMM yyyy') : 'Not set'}"></p>
             </div>
-            <div class="account-detail-row">
+            <div class="account-detail-row" th:if="${isOwnProfile}">
                 <span class="text-muted small">Phone Number</span>
                 <p class="fw-semibold mb-0" th:text="${user.phoneNumber} ?: 'Not set'"></p>
             </div>
@@ -58,7 +84,7 @@
                 <p class="fw-semibold mb-0" th:text="${user.bio} ?: 'Not set'"></p>
             </div>
 
-            <a th:href="@{/users/{id}/edit(id=${user.id})}" class="btn btn-primary btn-sm mt-3">Edit Profile</a>
+            <a th:if="${isOwnProfile}" th:href="@{/users/{id}/edit(id=${user.id})}" class="btn btn-primary btn-sm mt-3">Edit Profile</a>
         </div>
     </div>
 

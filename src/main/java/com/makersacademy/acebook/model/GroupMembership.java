@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @Entity
 @NoArgsConstructor
@@ -23,10 +25,20 @@ public class GroupMembership {
     @JoinColumn(name = "group_id")
     private Group group;
 
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
     private String role = "MEMBER";
 
     public GroupMembership(User user, Group group) {
         this.user = user;
         this.group = group;
+    }
+
+    @PrePersist
+    void setCreatedAt() {
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
     }
 }
