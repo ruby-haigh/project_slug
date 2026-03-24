@@ -13,6 +13,7 @@ import com.makersacademy.acebook.repository.GroupResponseRepository;
 import com.makersacademy.acebook.repository.PromptRepository;
 import com.makersacademy.acebook.repository.UserRepository;
 import com.makersacademy.acebook.service.CloudinaryService;
+import com.makersacademy.acebook.service.SpotifyPlaylistService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -56,6 +57,9 @@ public class PromptController {
 
     @Autowired
     private CloudinaryService cloudinaryService;
+
+    @Autowired
+    private SpotifyPlaylistService spotifyPlaylistService;
 
     @GetMapping("/groups/{groupId}/prompts/open")
     public String openPromptFormFromEmail(@PathVariable Long groupId, HttpSession session) {
@@ -109,7 +113,16 @@ public class PromptController {
         List<Prompt> promptsForForm = new ArrayList<>();
 
         if (cyclePromptLinks.isEmpty()) {
-            List<Prompt> randomPrompts = promptRepository.findRandomPrompts();
+            List<Prompt> randomPrompts = new ArrayList<>();
+            List<Prompt> songPrompts = promptRepository.findRandomSongPrompt();
+
+            if (!songPrompts.isEmpty()) {
+                Prompt songPrompt = songPrompts.get(0);
+                randomPrompts.add(songPrompt);
+                randomPrompts.addAll(promptRepository.findRandomPromptsExcluding(songPrompt.getId(), 2));
+            } else {
+                randomPrompts = promptRepository.findRandomPrompts();
+            }
 
             for (Prompt prompt : randomPrompts) {
                 GroupCyclePrompt link = new GroupCyclePrompt(currentCycle.getId(), prompt.getId());
@@ -127,6 +140,7 @@ public class PromptController {
         model.addAttribute("groupCycleId", currentCycle.getId());
         model.addAttribute("prompts", promptsForForm);
         model.addAttribute("alreadySubmitted", alreadySubmitted);
+        model.addAttribute("spotifyPlaylistService", spotifyPlaylistService);
 
         return "prompts/form";
     }
@@ -168,6 +182,12 @@ public class PromptController {
                     responseText,
                     LocalDateTime.now()
             );
+
+            Prompt prompt = promptRepository.findById(promptId).orElse(null);
+            if (prompt != null && spotifyPlaylistService.looksLikeSpotifyPrompt(prompt.getPrompt())) {
+                String spotifyTrackUrl = spotifyPlaylistService.normalizeSpotifyTrackUrl(responseText);
+                response.setSpotifyTrackUrl(spotifyTrackUrl);
+            }
 
             // Upload image to Cloudinary if one was provided for this prompt
             if (images != null && i < images.size() && !images.get(i).isEmpty()) {

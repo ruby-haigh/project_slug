@@ -14,44 +14,44 @@ INSERT INTO group_cycles (group_id, cycle_start, cycle_end) VALUES (1, '2026-03-
 
 INSERT INTO group_responses (group_cycle_id, group_id, user_id, prompt_id, response_text)
 VALUES (
-        1, 1, 1, 1,
-        'I passed my driving test'
+           1, 1, 1, 1,
+           'I passed my driving test'
        );
 INSERT INTO group_responses (group_cycle_id, group_id, user_id, prompt_id, response_text)
 VALUES (
-        1, 1, 2, 1,
-        'I got a promotion at work'
+           1, 1, 2, 1,
+           'I got a promotion at work'
        );
 INSERT INTO group_responses (group_cycle_id, group_id, user_id, prompt_id, response_text)
 VALUES (
-        1, 1, 1, 1,
-        'I beat my 5K PB'
+           1, 1, 3, 1,
+           'I beat my 5K PB'
        );
 INSERT INTO group_responses (group_cycle_id, group_id, user_id, prompt_id, response_text)
 VALUES (
-        1, 1, 1, 1,
-        'I made it through Monday'
+           1, 1, 4, 1,
+           'I made it through Monday'
        );
 
 INSERT INTO group_responses (group_cycle_id, group_id, user_id, prompt_id, response_text)
 VALUES (
-        1, 1, 1, 3,
-        'Breaking Bad. Absolutely, best show ever!'
+           1, 1, 1, 13,
+           'Breaking Bad. Best show ever!'
        );
 INSERT INTO group_responses (group_cycle_id, group_id, user_id, prompt_id, response_text)
 VALUES (
-        1, 1, 2, 3,
-        'The Harry Potter franchise for the 1000th time. Always.'
+           1, 1, 2, 13,
+           'The Harry Potter franchise for the 1000th time. Always.'
        );
 INSERT INTO group_responses (group_cycle_id, group_id, user_id, prompt_id, response_text)
 VALUES (
-        1, 1, 1, 3,
-        'Twilight. Nope.'
+           1, 1, 3, 13,
+           'Twilight. Nope.'
        );
 INSERT INTO group_responses (group_cycle_id, group_id, user_id, prompt_id, response_text)
 VALUES (
-        1, 1, 1, 3,
-        'Daredevil in preparation for the new season!'
+           1, 1, 4, 13,
+           'Daredevil in preparation for the new season!'
        );
 
 

@@ -50,12 +50,16 @@
                                 Prompt text goes here
                             </label>
                             <input type="hidden" name="promptIds" th:value="${prompt.id}" />
+                            <p th:if="${spotifyPlaylistService.looksLikeSpotifyPrompt(prompt.prompt)}"
+                               class="scrapbook-helper mt-2 mb-2">
+                                Paste a Spotify track link for this one and we’ll add it to the issue playlist.
+                            </p>
                             <div class="position-relative mt-2">
                                 <textarea
                                     th:id="'response-' + ${iterStat.index}"
                                     name="responseTexts"
                                     class="scrapbook-input scrapbook-textarea"
-                                    placeholder="Type your answer here"></textarea>
+                                    th:placeholder="${spotifyPlaylistService.looksLikeSpotifyPrompt(prompt.prompt)} ? 'Paste a Spotify song link here' : 'Type your answer here'"></textarea>
                                     <label th:for="'image-' + ${iterStat.index}"
                                            style="position: absolute; bottom: 10px; right: 10px; cursor: pointer;"
                                            title="Add a photo">

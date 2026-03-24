@@ -42,6 +42,12 @@ public class GroupCycle {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @Column(name = "spotify_playlist_id")
+    private String spotifyPlaylistId;
+
+    @Column(name = "spotify_playlist_url")
+    private String spotifyPlaylistUrl;
+
     @Column(name = "feed_email_sent_at")
     private LocalDateTime feedEmailSentAt;
 
