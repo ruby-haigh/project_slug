@@ -127,23 +127,24 @@
                      th:data-own="${response.userId == currentUserId}">
                     <strong th:text="${response.userName}" style="cursor: pointer;">User</strong>
 
-                    <!-- Contact card popup -->
+                    <!--contact card -->
                     <div class="contact-card-popup">
-                        <div class="d-flex align-items-center gap-2 mb-2">
+                        <div class="d-flex align-items-center gap-2 mb-3">
                             <img th:src="${response.userAvatar} ?: 'https://ui-avatars.com/api/?name=' + ${response.userName} + '&background=' + ${response.userAvatarColour} + '&color=666&rounded=true&size=40'"
                                  class="rounded-circle" style="width:40px;height:40px;object-fit:cover;">
                             <div>
                                 <div class="fw-bold" th:text="${response.userName}"></div>
-                                <div class="text-muted small" th:text="${response.userGroupCount} + ' circles'"></div>
+                                <div class="text-muted small"
+                                     th:text="${response.userGroupCount} + (${response.userGroupCount == 1} ? ' circle' : ' circles')"></div>
                             </div>
                         </div>
-                        <div class="d-flex gap-2 mt-2" th:if="${response.userId != currentUserId}">
+                        <div class="d-flex flex-column gap-2" th:if="${response.userId != currentUserId}">
                             <a th:href="'mailto:' + ${response.userEmail}"
-                               class="btn btn-sm btn-outline-secondary">✉ Email</a>
+                               class="contact-card-btn">✉ Send Email</a>
                             <a th:if="${response.userPhone != null}"
                                th:href="'https://wa.me/' + ${response.userPhone}"
                                target="_blank"
-                               class="btn btn-sm btn-outline-success">💬 WhatsApp</a>
+                               class="contact-card-btn contact-card-btn-green">💬 WhatsApp</a>
                         </div>
                     </div>
                 </div>
