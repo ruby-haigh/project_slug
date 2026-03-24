@@ -157,6 +157,9 @@ public class FeedController {
             responseData.put("responseText", r.getResponseText());
             responseData.put("userId", r.getUserId());
             responseData.put("userName", r.getUser() != null ? r.getUser().getName() : null);
+            responseData.put("userEmail", r.getUser() != null ? r.getUser().getEmail() : null);
+            responseData.put("userProfilePictureUrl", r.getUser() != null ? r.getUser().getProfilePictureUrl() : null);
+            responseData.put("userAvatarColour", r.getUser() != null ? r.getUser().getAvatarColour() : "c4def2");
             responseData.put("imageUrl", r.getImageUrl());
             responseData.put("spotifyTrackUrl", r.getSpotifyTrackUrl());
 
