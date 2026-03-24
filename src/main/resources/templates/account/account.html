@@ -11,22 +11,25 @@
 <body>
 <div th:replace="fragments/navbar :: navbar"></div>
 
-<div class="container mt-5" style="max-width: 620px;">
+<div class="container mt-5 account-shell" style="max-width: 620px;">
 
-    <h2 class="fw-bold mb-1">My Account</h2>
-    <p id="user-email" class="text-muted mb-4" th:text="${user.email}"></p>
+    <div class="account-heading mb-4">
+        <span class="account-kicker">Profile</span>
+        <h2 class="fw-bold mb-1">My Account</h2>
+        <p id="user-email" class="text-muted mb-0" th:text="${user.email}"></p>
+    </div>
 
     <!--profile info -->
-    <div class="card border-0 shadow-sm mb-4">
-        <div class="card-body px-4 py-3">
+    <div class="card border-0 shadow-sm mb-4 account-card">
+        <div class="card-body px-4 py-4">
             <h6 class="text-uppercase text-muted fw-semibold small mb-3">Profile</h6>
 
             <!--profile pic-->
-            <div class="mb-3 text-center" style="position: relative; display: inline-block;">
+            <div class="mb-4 text-center" style="position: relative; display: inline-block;">
                 <label for="profilePicInput" style="cursor: pointer;">
                     <img th:src="${user.profilePictureUrl} ?: 'https://ui-avatars.com/api/?name=' + ${user.email?.substring(0,1)} + '&background=' + ${user.avatarColour} + '&color=666&rounded=true&size=80'"
                          alt="Profile picture"
-                         class="rounded-circle"
+                         class="rounded-circle account-avatar"
                          style="width: 80px; height: 80px; object-fit: cover;">
                     <div style="position: absolute; bottom: 0; right: 0; background: #198754; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border: 2px solid white;">
                         <i class="bi bi-camera-fill text-white" style="font-size: 13px;"></i>
@@ -38,16 +41,24 @@
                 </form>
             </div>
 
-            <div class="mb-2">
+            <div class="account-detail-row">
                 <span class="text-muted small">Name</span>
                 <p class="fw-semibold mb-0" th:text="${user.name} ?: 'Not set'"></p>
             </div>
-            <div class="mb-2">
+            <div class="account-detail-row">
+                <span class="text-muted small">Age</span>
+                <p class="fw-semibold mb-0" th:text="${user.age} ?: 'Not set'"></p>
+            </div>
+            <div class="account-detail-row">
+                <span class="text-muted small">Phone Number</span>
+                <p class="fw-semibold mb-0" th:text="${user.phoneNumber} ?: 'Not set'"></p>
+            </div>
+            <div class="account-detail-row">
                 <span class="text-muted small">Bio</span>
                 <p class="fw-semibold mb-0" th:text="${user.bio} ?: 'Not set'"></p>
             </div>
 
-            <a th:href="@{/users/{id}/edit(id=${user.id})}" class="btn btn-primary btn-sm mt-2">Edit Profile</a>
+            <a th:href="@{/users/{id}/edit(id=${user.id})}" class="btn btn-primary btn-sm mt-3">Edit Profile</a>
         </div>
     </div>
 
