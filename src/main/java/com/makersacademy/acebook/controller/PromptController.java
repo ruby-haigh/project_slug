@@ -168,18 +168,20 @@ public class PromptController {
             Long promptId = promptIds.get(i);
             String responseText = responseTexts.get(i);
 
-            // Skip this prompt if the user left the text field empty
-            if (responseText == null || responseText.trim().isEmpty()) {
+            //skips the card if the text == null AND the img == null
+            boolean hasText = responseText != null && !responseText.trim().isEmpty();
+            boolean hasImage = images != null && i < images.size() && !images.get(i).isEmpty();
+
+            if (!hasText && !hasImage) {
                 continue;
             }
 
-            // Create a new response object with the cycle, group, user and prompt context
             GroupResponse response = new GroupResponse(
                     groupCycleId,
                     groupId,
                     userId,
                     promptId,
-                    responseText,
+                    hasText ? responseText : "",
                     LocalDateTime.now()
             );
 
