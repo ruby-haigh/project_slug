@@ -117,7 +117,17 @@
 
             <div th:each="response : ${entry.value}" class="mb-3 p-3 rounded" style="background:#f9f6ef;">
 
-                <strong th:text="${response.userName}">User</strong>
+                <div class="feed-response-header mb-2">
+                    <img th:if="${response.userProfilePictureUrl != null}"
+                         th:src="${response.userProfilePictureUrl}"
+                         alt="Profile picture"
+                         class="feed-response-avatar">
+                    <img th:unless="${response.userProfilePictureUrl != null}"
+                         th:src="'https://ui-avatars.com/api/?name=' + ${response.userName} + '&background=' + ${response.userAvatarColour} + '&color=666&rounded=true&size=64'"
+                         alt="Profile picture"
+                         class="feed-response-avatar">
+                    <strong th:text="${response.userName}">User</strong>
+                </div>
 
                 <p th:if="${response.spotifyTrackUrl == null and !(response.responseText != null and #strings.contains(response.responseText, 'open.spotify.com/track/'))}"
                    class="mb-0" th:text="${response.responseText}">Response</p>
