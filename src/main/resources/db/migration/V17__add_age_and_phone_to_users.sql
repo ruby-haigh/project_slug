@@ -1,0 +1,3 @@
+ALTER TABLE users
+ADD COLUMN age INTEGER,
+ADD COLUMN phone_number VARCHAR(255);

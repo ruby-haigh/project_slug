@@ -98,18 +98,20 @@
                         <p th:if="${response.spotifyTrackUrl == null and !(response.responseText != null and #strings.contains(response.responseText, 'open.spotify.com/track/'))}"
                            class="mb-0" th:text="${response.responseText}">Response</p>
 
-                        <p th:if="${response.spotifyTrackUrl != null or (response.responseText != null and #strings.contains(response.responseText, 'open.spotify.com/track/'))}"
-                           class="mb-0">Shared a song for this issue.</p>
-
-                        <a th:if="${response.spotifyTrackUrl != null}"
-                           th:href="${response.spotifyTrackUrl}"
-                           target="_blank" rel="noopener"
-                           class="d-inline-block mt-2">Open song in Spotify</a>
-
-                        <a th:if="${response.spotifyTrackUrl == null and response.responseText != null and #strings.contains(response.responseText, 'open.spotify.com/track/')}"
-                           th:href="${response.responseText}"
-                           target="_blank" rel="noopener"
-                           class="d-inline-block mt-2">Open song in Spotify</a>
+                        <div th:if="${response.spotifyTrackUrl != null}" class="feed-song-card mt-2">
+                            <div class="feed-song-icon">♫</div>
+                            <div class="feed-song-copy">
+                                <p class="feed-song-label mb-1">Shared song</p>
+                                <strong class="feed-song-title"
+                                        th:text="${response.spotifyTrack.title}">Song title</strong>
+                                <p class="feed-song-artist mb-0"
+                                   th:if="${response.spotifyTrack.artist != null and !response.spotifyTrack.artist.isBlank()}"
+                                   th:text="${response.spotifyTrack.artist}">Artist</p>
+                            </div>
+                            <a th:href="${response.spotifyTrackUrl}"
+                               target="_blank" rel="noopener"
+                               class="feed-song-link">Open in Spotify</a>
+                        </div>
 
                         <img th:if="${response.imageUrl != null}"
                              th:src="${response.imageUrl}"
