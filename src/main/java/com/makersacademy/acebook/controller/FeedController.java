@@ -92,6 +92,7 @@ public class FeedController {
         LocalDateTime end = start.plusWeeks(1);
 
         boolean feedLocked = LocalDateTime.now().isBefore(end);
+        //boolean feedLocked = false; //LocalDateTime.now().isBefore(end);
 
         model.addAttribute("feedLocked", feedLocked);
         model.addAttribute("unlockTime", end);

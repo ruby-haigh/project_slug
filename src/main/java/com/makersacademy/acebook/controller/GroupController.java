@@ -20,7 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
+import java.util.Random;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -94,6 +94,10 @@ public class GroupController {
         }
 
         Group group = new Group(name, frequency);
+
+        String[] icons = {"✧", "✉", "☁", "★", "☀"};
+        group.setIcon(icons[new Random().nextInt(icons.length)]);
+
         groupRepository.save(group);
 
         User user = getCurrentUser();
