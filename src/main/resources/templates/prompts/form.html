@@ -46,7 +46,21 @@
                     </div>
                 </div>
 
-                <div th:unless="${alreadySubmitted}" class="w-100">
+                <div th:if="${!alreadySubmitted and promptWindowClosed}" class="w-100 text-center">
+                    <div class="scrapbook-message scrapbook-message-error">
+                        <span th:if="${justClosed}">The prompt window has closed for this cycle.</span>
+                        <span th:unless="${justClosed}">This cycle is now locked for new responses.</span>
+                    </div>
+                    <p class="scrapbook-card-meta">The issue is being shaped from responses submitted during the first week.</p>
+                    <div class="text-center mt-4">
+                        <a th:href="@{/groups}" class="scrapbook-link">
+                            <span>←</span>
+                            <span>Back to Circles</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div th:if="${!alreadySubmitted and !promptWindowClosed}" class="w-100">
                     <p class="scrapbook-card-meta mb-4">Answer the prompts below and your responses will be saved to this cycle.</p>
 
                     <form th:action="@{/groups/{groupId}/prompts(groupId=${groupId})}" method="post"

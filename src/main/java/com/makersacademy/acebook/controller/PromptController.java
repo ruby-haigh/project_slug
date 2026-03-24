@@ -75,6 +75,7 @@ public class PromptController {
 
     @GetMapping("/groups/{groupId}/prompts")
     public String showPromptForm(@PathVariable Long groupId,
+                                 @RequestParam(required = false, defaultValue = "false") boolean closed,
                                  @RequestParam(required = false, defaultValue = "false") boolean submitted,
                                  Model model) {
         Optional<Group> optionalGroup = groupRepository.findById(groupId);
@@ -105,6 +106,7 @@ public class PromptController {
 
         User dbUser = getCurrentUser().orElseThrow();
         Long userId = dbUser.getId();
+        boolean promptWindowClosed = !now.isBefore(currentCycle.getCycleStart().plusWeeks(1));
 
         boolean alreadySubmitted =
                 groupResponseRepository.existsByGroupCycleIdAndUserId(currentCycle.getId(), userId);
@@ -142,6 +144,8 @@ public class PromptController {
         model.addAttribute("groupCycleId", currentCycle.getId());
         model.addAttribute("prompts", promptsForForm);
         model.addAttribute("alreadySubmitted", alreadySubmitted);
+        model.addAttribute("justClosed", closed);
+        model.addAttribute("promptWindowClosed", promptWindowClosed);
         model.addAttribute("justSubmitted", submitted);
         model.addAttribute("spotifyPlaylistService", spotifyPlaylistService);
 
@@ -164,6 +168,13 @@ public class PromptController {
 
         if (alreadySubmitted) {
             return "redirect:/groups/" + groupId + "/prompts";
+        }
+
+        GroupCycle cycle = groupCycleRepository.findById(groupCycleId).orElseThrow();
+        boolean promptWindowClosed = !LocalDateTime.now().isBefore(cycle.getCycleStart().plusWeeks(1));
+
+        if (promptWindowClosed) {
+            return "redirect:/groups/" + groupId + "/prompts?closed=true";
         }
 
         // Loop through each prompt that was submitted in the form
