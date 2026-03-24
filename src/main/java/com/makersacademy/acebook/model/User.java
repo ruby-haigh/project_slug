@@ -43,4 +43,20 @@ public class User {
         String[] pastels = {"f2c4ce", "c4def2", "c4f2d5", "f2e8c4", "e8c4f2", "f2cfc4"};
         return pastels[(int)(Math.abs(email.hashCode()) % pastels.length)];
     }
+
+    public String getWhatsAppNumber() {
+        if (phoneNumber == null || phoneNumber.isBlank()) return null;
+
+        String cleaned = phoneNumber.replaceAll("[\\s\\-\\(\\)]", "");
+
+        if (cleaned.startsWith("+")) {
+            cleaned = cleaned.substring(1);
+        }
+
+        if (cleaned.startsWith("07")) {
+            cleaned = "44" + cleaned.substring(1);
+        }
+
+        return cleaned;
+    }
 }
