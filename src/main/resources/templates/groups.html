@@ -48,7 +48,7 @@
                  th:onclick="${hasFeedMap[group.id]} ? 'window.location.href=\'/feed/' + ${group.id} + '\''">
                 <div class="scrapbook-card-body">
                     <div class="scrapbook-illustration">
-                        <div class="scrapbook-icon">☺</div>
+                        <div class="home-card-icon" th:text="${group.icon}">✧</div>
                     </div>
 
                     <h5 class="scrapbook-card-title" th:text="${group.name}">Group Name</h5>
@@ -83,7 +83,7 @@
                  th:onclick="${hasFeedMap[group.id]} ? 'window.location.href=\'/feed/' + ${group.id} + '\''">
                 <div class="scrapbook-card-body">
                     <div class="scrapbook-illustration">
-                        <div class="scrapbook-icon">✧</div>
+                        <div class="home-card-icon" th:text="${group.icon}">✧</div>
                     </div>
 
                     <h5 class="scrapbook-card-title" th:text="${group.name}">Group Name</h5>
@@ -118,7 +118,7 @@
                  th:onclick="${hasFeedMap[group.id]} ? 'window.location.href=\'/feed/' + ${group.id} + '\''">
                 <div class="scrapbook-card-body">
                     <div class="scrapbook-illustration">
-                        <div class="scrapbook-icon">✉</div>
+                        <div class="home-card-icon" th:text="${group.icon}">✧</div>
                     </div>
 
                     <h5 class="scrapbook-card-title" th:text="${group.name}">Group Name</h5>
