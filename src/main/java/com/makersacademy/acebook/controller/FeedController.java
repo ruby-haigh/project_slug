@@ -151,6 +151,10 @@ public class FeedController {
 
         for (GroupResponse r : responses) {
             Prompt prompt = promptRepository.findById(r.getPromptId()).orElseThrow();
+            String spotifyTrackUrl = r.getSpotifyTrackUrl();
+            if (spotifyTrackUrl == null || spotifyTrackUrl.isBlank()) {
+                spotifyTrackUrl = spotifyPlaylistService.normalizeSpotifyTrackUrl(r.getResponseText());
+            }
 
             Map<String, Object> responseData = new LinkedHashMap<>();
             responseData.put("responseId", r.getId());
@@ -161,7 +165,8 @@ public class FeedController {
             responseData.put("userProfilePictureUrl", r.getUser() != null ? r.getUser().getProfilePictureUrl() : null);
             responseData.put("userAvatarColour", r.getUser() != null ? r.getUser().getAvatarColour() : "c4def2");
             responseData.put("imageUrl", r.getImageUrl());
-            responseData.put("spotifyTrackUrl", r.getSpotifyTrackUrl());
+            responseData.put("spotifyTrackUrl", spotifyTrackUrl);
+            responseData.put("spotifyTrack", spotifyTrackUrl != null ? spotifyPlaylistService.buildTrackLink(spotifyTrackUrl) : null);
 
             newsletter.computeIfAbsent(prompt, k -> new ArrayList<>()).add(responseData);
         }
