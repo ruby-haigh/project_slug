@@ -6,6 +6,7 @@ import com.makersacademy.acebook.repository.GroupRepository;
 import com.makersacademy.acebook.repository.GroupResponseReactionRepository;
 import com.makersacademy.acebook.repository.GroupResponseRepository;
 import com.makersacademy.acebook.repository.PromptRepository;
+import com.makersacademy.acebook.service.SpotifyPlaylistService;
 import com.makersacademy.acebook.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,8 +22,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Optional;
 
 @Controller
@@ -42,6 +45,7 @@ public class FeedController {
     private PromptRepository promptRepository;
 
     @Autowired
+    private SpotifyPlaylistService spotifyPlaylistService;
     private GroupResponseReactionRepository groupResponseReactionRepository;
 
     @Autowired
@@ -79,6 +83,16 @@ public class FeedController {
         List<GroupResponse> responses =
                 groupResponseRepository.findResponsesForFirstWeek(cycle.getId(), start, end);
 
+        Set<String> soundtrackLinks = new LinkedHashSet<>();
+        for (GroupResponse response : responses) {
+            String spotifyTrackUrl = response.getSpotifyTrackUrl();
+            if (spotifyTrackUrl == null || spotifyTrackUrl.isBlank()) {
+                spotifyTrackUrl = spotifyPlaylistService.normalizeSpotifyTrackUrl(response.getResponseText());
+            }
+
+            if (spotifyTrackUrl != null && !spotifyTrackUrl.isBlank()) {
+                soundtrackLinks.add(spotifyTrackUrl);
+            }
         // get logged-in auth user
         DefaultOidcUser user = (DefaultOidcUser) SecurityContextHolder
                 .getContext()
@@ -127,13 +141,13 @@ public class FeedController {
         for (GroupResponse r : responses) {
             Prompt prompt = promptRepository.findById(r.getPromptId()).orElseThrow();
 
-            // create a small map with response + user info
             Map<String, Object> responseData = new LinkedHashMap<>();
             responseData.put("responseId", r.getId());
             responseData.put("responseText", r.getResponseText());
             responseData.put("userId", r.getUserId());
-            responseData.put("userName", r.getUser().getName());
+            responseData.put("userName", r.getUser() != null ? r.getUser().getName() : null);
             responseData.put("imageUrl", r.getImageUrl());
+            responseData.put("spotifyTrackUrl", r.getSpotifyTrackUrl());
 
             newsletter.computeIfAbsent(prompt, k -> new ArrayList<>()).add(responseData);
         }
@@ -141,6 +155,7 @@ public class FeedController {
         model.addAttribute("group", group);
         model.addAttribute("cycle", cycle);
         model.addAttribute("newsletter", newsletter);
+        model.addAttribute("soundtrackLinks", spotifyPlaylistService.buildTrackLinks(new ArrayList<>(soundtrackLinks)));
         model.addAttribute("reactionCountsByResponse", reactionCountsByResponse);
         model.addAttribute("userReactionByResponse", userReactionByResponse);
 
