@@ -153,7 +153,7 @@ public class UsersController {
 
     @PostMapping("/users/{id}/edit")
     public RedirectView updateAccount(@RequestParam String name,
-                                      @RequestParam String dateOfBirth,
+                                      @RequestParam(required = false) String dateOfBirth,
                                       @RequestParam String phoneNumber,
                                       @RequestParam String bio,
                                       @PathVariable Long id) {
@@ -162,7 +162,9 @@ public class UsersController {
         }
         Optional <User> currentUser = userRepository.findById(id);
         currentUser.get().setName(name);
-        currentUser.get().setDateOfBirth(java.time.LocalDate.parse(dateOfBirth));
+        if (dateOfBirth != null && !dateOfBirth.isBlank()) {
+            currentUser.get().setDateOfBirth(java.time.LocalDate.parse(dateOfBirth));
+        }
         currentUser.get().setPhoneNumber(phoneNumber);
         currentUser.get().setBio(bio);
         userRepository.save(currentUser.get());
