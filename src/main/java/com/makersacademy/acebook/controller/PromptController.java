@@ -74,7 +74,9 @@ public class PromptController {
     }
 
     @GetMapping("/groups/{groupId}/prompts")
-    public String showPromptForm(@PathVariable Long groupId, Model model) {
+    public String showPromptForm(@PathVariable Long groupId,
+                                 @RequestParam(required = false, defaultValue = "false") boolean submitted,
+                                 Model model) {
         Optional<Group> optionalGroup = groupRepository.findById(groupId);
         if (optionalGroup.isEmpty()) {
             return "redirect:/groups";
@@ -140,6 +142,7 @@ public class PromptController {
         model.addAttribute("groupCycleId", currentCycle.getId());
         model.addAttribute("prompts", promptsForForm);
         model.addAttribute("alreadySubmitted", alreadySubmitted);
+        model.addAttribute("justSubmitted", submitted);
         model.addAttribute("spotifyPlaylistService", spotifyPlaylistService);
 
         return "prompts/form";
@@ -204,7 +207,7 @@ public class PromptController {
             groupResponseRepository.save(response);
         }
 
-        return "redirect:/groups/" + groupId + "/prompts";
+        return "redirect:/groups/" + groupId + "/prompts?submitted=true";
     }
 
     private Optional<User> getCurrentUser() {

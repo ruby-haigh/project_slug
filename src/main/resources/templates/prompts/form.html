@@ -26,10 +26,18 @@
                 <h5 class="scrapbook-card-title">Monthly update</h5>
 
                 <div th:if="${alreadySubmitted}" class="w-100 text-center">
-                    <div class="scrapbook-message scrapbook-message-success">
-                        You've already submitted your update for this cycle.
+                    <div class="prompt-success-burst" th:if="${justSubmitted}">
+                        <span class="prompt-success-burst-icon prompt-success-burst-icon-left">✦</span>
+                        <span class="prompt-success-burst-icon prompt-success-burst-icon-right">✧</span>
+                        <span class="prompt-success-burst-icon prompt-success-burst-icon-bottom">♡</span>
                     </div>
-                    <p class="scrapbook-card-meta">You're all set for this month.</p>
+                    <div class="scrapbook-message scrapbook-message-success"
+                         th:classappend="${justSubmitted} ? ' scrapbook-message-success-celebrate'">
+                        <span th:if="${justSubmitted}">Your update has been sent.</span>
+                        <span th:unless="${justSubmitted}">You've already submitted your update for this cycle.</span>
+                    </div>
+                    <p class="scrapbook-card-meta" th:if="${justSubmitted}">Nice work. Your responses are tucked into this issue now.</p>
+                    <p class="scrapbook-card-meta" th:unless="${justSubmitted}">You're all set for this month.</p>
                     <div class="text-center mt-4">
                         <a th:href="@{/groups}" class="scrapbook-link">
                             <span>←</span>
