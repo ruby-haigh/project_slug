@@ -36,40 +36,39 @@
 <body>
 <div class="feed-container">
 <!-- Navbar -->
-<div th:replace="fragments/navbar :: navbar"></div>
-    <div class="group-header-wrapper">
-        <div class="container" style="max-width: 700px;">
-        <div class="group-header-card">
-            <div class="group-header-top">
-                <div class="home-card-illustration">
-                    <div class="home-card-icon">✧</div>
-                </div>
+    <div th:replace="fragments/navbar :: navbar"></div>
+        <div class="group-header-wrapper">
+            <div class="container" style="max-width: 700px;">
+                <div class="group-header-card">
+                    <div class="group-header-top">
+                        <div class="home-card-illustration">
+                            <div class="home-card-icon">✧</div>
+                        </div>
 
-                <!-- Month of current issue-->
-                <div class="header-pill"
-                   th:text="${monthName} + ' issue'">
-                </div>
+                    <!-- Month of current issue-->
+                        <div class="header-pill" th:text="${monthName} + ' issue'">
+                        </div>
 
-                <div class="header-pill">
-            <span th:if="${group.members != null and #lists.size(group.members) > 0}">
-                <button type="button" class="btn btn-outline-secondary btn-sm"
-                        data-bs-toggle="modal"
-                        data-bs-target="#membersModal">
-                    <span th:text="${#lists.size(group.members)}"></span>
-                    <span th:text="${#lists.size(group.members) == 1} ? 'member' : 'members'"></span>
-                </button>
-            </span>
-                    <span th:if="${group.members == null or #lists.isEmpty(group.members)}">
-                No members yet
-            </span>
+                        <div class="header-pill">
+                            <span th:if="${group.members != null and #lists.size(group.members) > 0}">
+                                <button type="button" class="btn btn-outline-secondary btn-sm"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#membersModal">
+                                    <span th:text="${#lists.size(group.members)}"></span>
+                                    <span th:text="${#lists.size(group.members) == 1} ? 'member' : 'members'"></span>
+                                </button>
+                            </span>
+                            <span th:if="${group.members == null or #lists.isEmpty(group.members)}">
+                            No members yet
+                            </span>
+                        </div>
+                    </div>
+                    <!-- Group name -->
+                    <h1 class="fw-bold mb-2" th:text="${group.name}">Group Name</h1>
+
                 </div>
             </div>
-            <!-- Group name -->
-            <h1 class="fw-bold mb-2" th:text="${group.name}">Group Name</h1>
-
         </div>
-    </div>
-    </div>
 
 <div class="container mt-5" style="max-width: 700px;">
     <div class="feed-content" th:classappend="${feedLocked} ? 'locked'">
