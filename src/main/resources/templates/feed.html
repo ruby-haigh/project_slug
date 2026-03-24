@@ -41,10 +41,8 @@
     <div class="container mt-5" style="max-width: 700px;">
         <div class="feed-content" th:classappend="${feedLocked} ? 'locked'">
 
-            <!-- Group name -->
             <h1 class="fw-bold mb-2" th:text="${group.name}">Group Name</h1>
 
-            <!-- Soundtrack -->
             <details th:if="${!#lists.isEmpty(soundtrackLinks)}" class="feed-soundtrack-card mb-4">
                 <summary class="feed-soundtrack-summary">
                     <div class="feed-soundtrack-header">
@@ -69,7 +67,6 @@
                 </div>
             </details>
 
-            <!-- Members -->
             <p class="text-muted mb-4">
                 <span th:if="${group.members != null and #lists.size(group.members) > 0}">
                     <button type="button" class="btn btn-outline-secondary btn-sm"
@@ -83,7 +80,6 @@
                 </span>
             </p>
 
-            <!-- Newsletter -->
             <div th:if="${#maps.isEmpty(newsletter)}" class="text-center text-muted mt-5">
                 <p>No responses yet 💌</p>
             </div>
@@ -93,16 +89,15 @@
                     [[${iterStat.index == 0} ? 'card-tilt-1 tape-top-left tape-bottom-right' : '']]
                     [[${iterStat.index == 1} ? 'card-tilt-2' : '']]">
 
-                    <!-- Prompt -->
                     <h5 th:text="${entry.key.prompt}">Example Prompt</h5>
 
-                    <!-- Responses -->
                     <div th:each="response : ${entry.value}" class="mb-3 p-3 rounded" style="background:#f9f6ef;">
 
                         <strong th:text="${response.userName}">User</strong>
 
                         <p th:if="${response.spotifyTrackUrl == null and !(response.responseText != null and #strings.contains(response.responseText, 'open.spotify.com/track/'))}"
                            class="mb-0" th:text="${response.responseText}">Response</p>
+
                         <p th:if="${response.spotifyTrackUrl != null or (response.responseText != null and #strings.contains(response.responseText, 'open.spotify.com/track/'))}"
                            class="mb-0">Shared a song for this issue.</p>
 
@@ -110,6 +105,7 @@
                            th:href="${response.spotifyTrackUrl}"
                            target="_blank" rel="noopener"
                            class="d-inline-block mt-2">Open song in Spotify</a>
+
                         <a th:if="${response.spotifyTrackUrl == null and response.responseText != null and #strings.contains(response.responseText, 'open.spotify.com/track/')}"
                            th:href="${response.responseText}"
                            target="_blank" rel="noopener"
@@ -177,7 +173,7 @@
                 <div class="feed-info-doodle feed-info-doodle-heart">♡</div>
                 <div class="feed-info-doodle feed-info-doodle-star">✧</div>
                 <div class="feed-info-inner">
-                    <h5 class="feed-info-title">That's a wrap</h5>
+                    <h5 class="feed-info-title">That’s a wrap</h5>
                     <p class="feed-info-text">
                         <span th:text="'A little snapshot of ' + ${group.name} + '\'s month 💌'"></span>
                     </p>
@@ -194,10 +190,10 @@
                             <span class="feed-step-icon">☰</span>
                             <span>New issue next month</span>
                         </span>
-                        <span class="feed-step-pill feed-step-pill-peach">
-                            <span class="feed-step-icon">💔</span>
-                            <span>Leave group</span>
-                        </span>
+
+                        <form th:action="@{/feed/{groupId}(groupId=${group.id})}" method="post" style="display:inline;">
+                            <button type="submit" class="feed-step-pill feed-step-pill-peach">💔 Leave group</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -211,7 +207,6 @@
             </div>
         </div>
 
-        <!-- Image Modal -->
         <div class="modal fade" id="imageModal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered" style="max-width: 70vw;">
                 <div class="modal-content bg-transparent border-0">
@@ -226,7 +221,6 @@
             </div>
         </div>
 
-        <!-- Members Modal -->
         <div class="modal fade" id="membersModal" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
