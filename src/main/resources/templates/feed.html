@@ -35,7 +35,7 @@
 </script>
 <body>
 <div class="feed-container">
-<!-- Navbar -->
+
     <div th:replace="~{fragments/navbar :: navbar}"></div>
     <div class="feed-content" th:classappend="${feedLocked} ? 'locked'">
         <div class="group-header-wrapper">
@@ -99,7 +99,7 @@
                 </a>
             </div>
         </details>
-        <!-- Newsletter: prompts and responses -->
+
         <div th:if="${#maps.isEmpty(newsletter)}" class="text-center text-muted mt-5">
             <p>No responses yet 💌</p>
         </div>
