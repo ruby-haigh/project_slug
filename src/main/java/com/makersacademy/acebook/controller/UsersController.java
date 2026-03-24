@@ -39,9 +39,52 @@ public class UsersController {
                 .getPrincipal();
 
         String email = (String) principal.getAttributes().get("email");
-        userRepository
+        User user = userRepository
                 .findUserByEmail(email)
                 .orElseGet(() -> userRepository.save(new User(email, "", "")));
+
+        if (!user.isProfileComplete()) {
+            return new RedirectView("/users/setup");
+        }
+
+        Object pendingInvite = session.getAttribute(GroupController.PENDING_INVITE_LINK_SESSION_KEY);
+
+        if (pendingInvite instanceof String pendingInviteLink && !pendingInviteLink.isBlank()) {
+            return new RedirectView("/circles/join?inviteLink="
+                    + URLEncoder.encode(pendingInviteLink, StandardCharsets.UTF_8));
+        }
+
+        Object pendingPrompt = session.getAttribute(PromptController.PENDING_PROMPT_LINK_SESSION_KEY);
+
+        if (pendingPrompt instanceof String pendingPromptLink && !pendingPromptLink.isBlank()) {
+            session.removeAttribute(PromptController.PENDING_PROMPT_LINK_SESSION_KEY);
+            return new RedirectView(pendingPromptLink);
+        }
+
+        return new RedirectView("/");
+    }
+
+    @GetMapping("/users/setup")
+    public String setupAccountForm(Model model) {
+        User user = getCurrentUser();
+        if (user.isProfileComplete()) {
+            return "redirect:/";
+        }
+
+        model.addAttribute("user", user);
+        return "account/setup-account-form";
+    }
+
+    @PostMapping("/users/setup")
+    public RedirectView setupAccount(@RequestParam String name,
+                                     @RequestParam Integer age,
+                                     @RequestParam String phoneNumber,
+                                     HttpSession session) {
+        User user = getCurrentUser();
+        user.setName(name);
+        user.setAge(age);
+        user.setPhoneNumber(phoneNumber);
+        userRepository.save(user);
 
         Object pendingInvite = session.getAttribute(GroupController.PENDING_INVITE_LINK_SESSION_KEY);
 
@@ -107,12 +150,18 @@ public class UsersController {
     }
 
     @PostMapping("/users/{id}/edit")
-    public RedirectView updateAccount(@RequestParam String name, @RequestParam String bio, @PathVariable Long id) {
-        Optional <User> currentUser = userRepository.findById(id);
+    public RedirectView updateAccount(@RequestParam String name,
+                                      @RequestParam Integer age,
+                                      @RequestParam String phoneNumber,
+                                      @RequestParam String bio,
+                                      @PathVariable Long id) {
+        Optional<User> currentUser = userRepository.findById(id);
         currentUser.get().setName(name);
+        currentUser.get().setAge(age);
+        currentUser.get().setPhoneNumber(phoneNumber);
         currentUser.get().setBio(bio);
         userRepository.save(currentUser.get());
-        return new RedirectView("/users/{id}");
+        return new RedirectView("/users/" + id);
     }
 
     @Transactional
@@ -141,5 +190,15 @@ public class UsersController {
 
         // log out fully
         return new RedirectView("/logout");
+    }
+
+    private User getCurrentUser() {
+        DefaultOidcUser principal = (DefaultOidcUser) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        String email = (String) principal.getAttributes().get("email");
+        return userRepository.findUserByEmail(email).orElseThrow();
     }
 }
