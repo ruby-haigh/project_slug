@@ -34,6 +34,7 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/images/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/spotify/connect", "/spotify/callback", "/spotify/setup-help").permitAll()
                         .requestMatchers(HttpMethod.GET, "/groups/*/prompts/open").permitAll()
                         .requestMatchers(HttpMethod.GET, "/circles/join", "/groups/*/join").permitAll()
                         .anyRequest().authenticated()

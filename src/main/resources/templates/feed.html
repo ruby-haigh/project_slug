@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${group.name} + ' Feed'">Group Feed</title>
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link th:href="@{/main.css}" rel="stylesheet">
 </head>
@@ -33,132 +32,215 @@
     setInterval(updateCountdown, 1000);
     updateCountdown();
 </script>
+
 <body>
 <div class="feed-container">
-<!-- Navbar -->
-<div th:replace="fragments/navbar :: navbar"></div>
 
-<div class="container mt-5" style="max-width: 700px;">
-    <div class="feed-content" th:classappend="${feedLocked} ? 'locked'">
-    <!-- Group name -->
-    <h1 class="fw-bold mb-2" th:text="${group.name}">Group Name</h1>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-    <!-- Members -->
-    <p class="text-muted mb-4">
-    <span th:if="${group.members != null and #lists.size(group.members) > 0}">
-        <button type="button" class="btn btn-outline-secondary btn-sm"
-                data-bs-toggle="modal"
-                data-bs-target="#membersModal">
-            <span th:text="${#lists.size(group.members)}"></span>
-            <span th:text="${#lists.size(group.members) == 1} ? 'member' : 'members'"></span>
-        </button>
-    </span>
-            <span th:if="${group.members == null or #lists.isEmpty(group.members)}">
-        No members yet
-    </span>
-        </p>
-    <!-- Newsletter: prompts and responses -->
-    <div th:if="${#maps.isEmpty(newsletter)}" class="text-center text-muted mt-5">
-        <p>No responses yet 💌</p>
-    </div>
+    <div class="container mt-5" style="max-width: 700px;">
+        <div class="feed-content" th:classappend="${feedLocked} ? 'locked'">
 
-    <div th:each="entry : ${newsletter}" class="mb-4">
-        <div class="feed-card
-             [[${iterStat.index == 0} ? 'card-tilt-1 tape-top-left tape-bottom-right' : '']]
-        [[${iterStat.index == 1} ? 'card-tilt-2' : '']]">
+            <h1 class="fw-bold mb-2" th:text="${group.name}">Group Name</h1>
 
-                <!-- Prompt -->
-                <h5 th:text="${entry.key.prompt}">Example Prompt</h5>
-
-                <!-- Responses -->
-                <div th:each="response : ${entry.value}" class="mb-2 p-2 rounded" style="background:#f9f6ef;">
-                    <strong th:text="${response.userName}">User</strong>
-                    <p class="mb-0" th:text="${response.responseText}">Response</p>
-                    <img th:if="${response.imageUrl != null}"
-                         th:src="${response.imageUrl}"
-                         alt="Response image"
-                         class="img-fluid rounded mt-2"
-                         style="max-height: 300px; object-fit: cover; cursor: pointer;"
-                         data-bs-toggle="modal"
-                         data-bs-target="#imageModal"
-                         th:attr="data-src=${response.imageUrl}"
-                         onclick="document.getElementById('modalImage').src = this.dataset.src">
+            <details th:if="${!#lists.isEmpty(soundtrackLinks)}" class="feed-soundtrack-card mb-4">
+                <summary class="feed-soundtrack-summary">
+                    <div class="feed-soundtrack-header">
+                        <span class="feed-soundtrack-icon">♫</span>
+                        <div>
+                            <strong class="feed-soundtrack-title">Issue soundtrack</strong>
+                            <p class="feed-soundtrack-text mb-0">Songs shared in this issue, all in one place.</p>
+                        </div>
+                    </div>
+                    <span class="feed-soundtrack-chevron">⌄</span>
+                </summary>
+                <div class="feed-soundtrack-links">
+                    <a th:each="track : ${soundtrackLinks}"
+                       th:href="${track.url}"
+                       target="_blank" rel="noopener"
+                       class="feed-soundtrack-link">
+                        <span class="feed-soundtrack-link-title" th:text="${track.title}">Song title</span>
+                        <span class="feed-soundtrack-link-artist"
+                              th:if="${track.artist != null and !track.artist.isBlank()}"
+                              th:text="${track.artist}">Artist</span>
+                    </a>
                 </div>
-        </div>
-    </div>
+            </details>
 
-    <div class="feed-info-card text-center mx-auto">
-
-        <div class="feed-info-doodle feed-info-doodle-heart">♡</div>
-        <div class="feed-info-doodle feed-info-doodle-star">✧</div>
-
-        <div class="feed-info-inner">
-
-            <h5 class="feed-info-title">That’s a wrap</h5>
-
-            <p class="feed-info-text">
-                <span th:text="'A little snapshot of ' + ${group.name} + '\'s month 💌'"></span>
+            <p class="text-muted mb-4">
+                <span th:if="${group.members != null and #lists.size(group.members) > 0}">
+                    <button type="button" class="btn btn-outline-secondary btn-sm"
+                            data-bs-toggle="modal" data-bs-target="#membersModal">
+                        <span th:text="${#lists.size(group.members)}"></span>
+                        <span th:text="${#lists.size(group.members) == 1} ? 'member' : 'members'"></span>
+                    </button>
+                </span>
+                <span th:if="${group.members == null or #lists.isEmpty(group.members)}">
+                    No members yet
+                </span>
             </p>
 
-            <div class="feed-info-actions">
-            <span class="feed-step-pill feed-step-pill-blue">
-                <span class="feed-step-icon">✉</span>
-                <span>Next prompts soon</span>
-            </span>
-
-                <span class="feed-step-pill feed-step-pill-peach">
-                <span class="feed-step-icon">✎</span>
-                <span>Write again</span>
-            </span>
-
-                <span class="feed-step-pill feed-step-pill-pink">
-                <span class="feed-step-icon">☰</span>
-                <span>New issue next month</span>
-            </span>
-
-                <!--                Form to leave a group-->
-                <form th:action="@{/feed/{groupId}(groupId=${group.getId()})}" method="post">
-                    <button type="submit" class="feed-step-pill feed-step-pill-peach">💔 Leave group</button>
-                </form>
+            <div th:if="${#maps.isEmpty(newsletter)}" class="text-center text-muted mt-5">
+                <p>No responses yet 💌</p>
             </div>
 
+            <div th:each="entry, iterStat : ${newsletter}" class="mb-4">
+                <div class="feed-card
+                    [[${iterStat.index == 0} ? 'card-tilt-1 tape-top-left tape-bottom-right' : '']]
+                    [[${iterStat.index == 1} ? 'card-tilt-2' : '']]">
+
+                    <h5 th:text="${entry.key.prompt}">Example Prompt</h5>
+
+                    <div th:each="response : ${entry.value}" class="mb-3 p-3 rounded" style="background:#f9f6ef;">
+
+                        <strong th:text="${response.userName}">User</strong>
+
+                        <p th:if="${response.spotifyTrackUrl == null and !(response.responseText != null and #strings.contains(response.responseText, 'open.spotify.com/track/'))}"
+                           class="mb-0" th:text="${response.responseText}">Response</p>
+
+                        <p th:if="${response.spotifyTrackUrl != null or (response.responseText != null and #strings.contains(response.responseText, 'open.spotify.com/track/'))}"
+                           class="mb-0">Shared a song for this issue.</p>
+
+                        <a th:if="${response.spotifyTrackUrl != null}"
+                           th:href="${response.spotifyTrackUrl}"
+                           target="_blank" rel="noopener"
+                           class="d-inline-block mt-2">Open song in Spotify</a>
+
+                        <a th:if="${response.spotifyTrackUrl == null and response.responseText != null and #strings.contains(response.responseText, 'open.spotify.com/track/')}"
+                           th:href="${response.responseText}"
+                           target="_blank" rel="noopener"
+                           class="d-inline-block mt-2">Open song in Spotify</a>
+
+                        <img th:if="${response.imageUrl != null}"
+                             th:src="${response.imageUrl}"
+                             alt="Response image"
+                             class="img-fluid rounded mt-2 mb-3"
+                             style="max-height: 300px; object-fit: cover; cursor: pointer;"
+                             data-bs-toggle="modal"
+                             data-bs-target="#imageModal"
+                             th:attr="data-src=${response.imageUrl}"
+                             onclick="document.getElementById('modalImage').src = this.dataset.src">
+
+                        <div class="pt-2 border-top" style="border-color: rgba(0,0,0,0.08) !important;">
+                            <div class="d-flex align-items-center gap-2 flex-wrap">
+
+                                <form th:action="@{/feed/{groupId}/responses/{responseId}/react(groupId=${group.id}, responseId=${response.responseId})}"
+                                      method="post" style="display:inline;">
+                                    <input type="hidden" name="emoji" value="❤️" />
+                                    <button type="submit"
+                                            class="btn btn-sm border-0 px-2 py-1 shadow-none d-flex align-items-center gap-1 rounded"
+                                            th:classappend="${userReactionByResponse[response.responseId] == '❤️'} ? ' bg-light text-dark fw-semibold' : ' bg-transparent text-secondary'">
+                                        <span>❤️</span>
+                                        <span class="text-dark"
+                                              th:if="${reactionCountsByResponse[response.responseId]['❤️'] > 0}"
+                                              th:text="${reactionCountsByResponse[response.responseId]['❤️']}">1</span>
+                                    </button>
+                                </form>
+
+                                <form th:action="@{/feed/{groupId}/responses/{responseId}/react(groupId=${group.id}, responseId=${response.responseId})}"
+                                      method="post" style="display:inline;">
+                                    <input type="hidden" name="emoji" value="😂" />
+                                    <button type="submit"
+                                            class="btn btn-sm border-0 px-2 py-1 shadow-none d-flex align-items-center gap-1 rounded"
+                                            th:classappend="${userReactionByResponse[response.responseId] == '😂'} ? ' bg-light text-dark fw-semibold' : ' bg-transparent text-secondary'">
+                                        <span>😂</span>
+                                        <span class="text-dark"
+                                              th:if="${reactionCountsByResponse[response.responseId]['😂'] > 0}"
+                                              th:text="${reactionCountsByResponse[response.responseId]['😂']}">1</span>
+                                    </button>
+                                </form>
+
+                                <form th:action="@{/feed/{groupId}/responses/{responseId}/react(groupId=${group.id}, responseId=${response.responseId})}"
+                                      method="post" style="display:inline;">
+                                    <input type="hidden" name="emoji" value="👍" />
+                                    <button type="submit"
+                                            class="btn btn-sm border-0 px-2 py-1 shadow-none d-flex align-items-center gap-1 rounded"
+                                            th:classappend="${userReactionByResponse[response.responseId] == '👍'} ? ' bg-light text-dark fw-semibold' : ' bg-transparent text-secondary'">
+                                        <span>👍</span>
+                                        <span class="text-dark"
+                                              th:if="${reactionCountsByResponse[response.responseId]['👍'] > 0}"
+                                              th:text="${reactionCountsByResponse[response.responseId]['👍']}">1</span>
+                                    </button>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feed-info-card text-center mx-auto">
+                <div class="feed-info-doodle feed-info-doodle-heart">♡</div>
+                <div class="feed-info-doodle feed-info-doodle-star">✧</div>
+                <div class="feed-info-inner">
+                    <h5 class="feed-info-title">That’s a wrap</h5>
+                    <p class="feed-info-text">
+                        <span th:text="'A little snapshot of ' + ${group.name} + '\'s month 💌'"></span>
+                    </p>
+                    <div class="feed-info-actions">
+                        <span class="feed-step-pill feed-step-pill-blue">
+                            <span class="feed-step-icon">✉</span>
+                            <span>Next prompts soon</span>
+                        </span>
+                        <span class="feed-step-pill feed-step-pill-peach">
+                            <span class="feed-step-icon">✎</span>
+                            <span>Write again</span>
+                        </span>
+                        <span class="feed-step-pill feed-step-pill-pink">
+                            <span class="feed-step-icon">☰</span>
+                            <span>New issue next month</span>
+                        </span>
+
+                        <form th:action="@{/feed/{groupId}(groupId=${group.id})}" method="post" style="display:inline;">
+                            <button type="submit" class="feed-step-pill feed-step-pill-peach">💔 Leave group</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
-    <div class="overlay" th:if="${feedLocked}">
-        <div class="overlay-content">
-            <h2>🔒 Feed Locked</h2>
-            <p>Unlocks in:</p>
-            <p id="countdown"></p>
+
+        <div class="overlay" th:if="${feedLocked}">
+            <div class="overlay-content">
+                <h2>🔒 Feed Locked</h2>
+                <p>Unlocks in:</p>
+                <p id="countdown"></p>
+            </div>
         </div>
-    </div>
-    <div class="modal fade" id="imageModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered" style="max-width: 70vw;">
-            <div class="modal-content bg-transparent border-0">
-                <div class="modal-body text-center p-0">
-                    <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-2" data-bs-dismiss="modal"></button>
-                    <img id="modalImage" src="" alt="Full size image" class="rounded d-block mx-auto" style="width: 50vw; height: 50vh; object-fit: fill;">
+
+        <div class="modal fade" id="imageModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered" style="max-width: 70vw;">
+                <div class="modal-content bg-transparent border-0">
+                    <div class="modal-body text-center p-0">
+                        <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-2"
+                                data-bs-dismiss="modal"></button>
+                        <img id="modalImage" src="" alt="Full size image"
+                             class="rounded d-block mx-auto"
+                             style="width: 50vw; height: 50vh; object-fit: fill;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="membersModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Group Members</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="list-group">
+                            <li th:each="membership : ${group.members}"
+                                class="list-group-item"
+                                th:text="${membership.user.name}">Member Name</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-<!-- Members Modal -->
-<div class="modal fade" id="membersModal" tabindex="-1" aria-labelledby="membersModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="membersModalLabel">Group Members</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <ul class="list-group">
-                    <li th:each="membership : ${group.members}" class="list-group-item"
-                        th:text="${membership.user.name}">Member Name</li>
-                </ul>
-            </div>
-        </div>
-    </div>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
