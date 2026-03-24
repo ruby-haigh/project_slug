@@ -24,6 +24,8 @@ public class Group {
     @OneToMany(mappedBy = "group")
     private List<GroupMembership> members;
 
+    private String icon;
+
     public Group(String name, String frequency) {
         this.name = name;
         this.frequency = frequency;

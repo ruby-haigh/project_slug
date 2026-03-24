@@ -86,10 +86,13 @@ public class FeedController {
                     .orElseThrow(() -> new RuntimeException("No cycle"));
         }
 
+
+
         LocalDateTime start = cycle.getCycleStart();
         LocalDateTime end = start.plusWeeks(1);
 
-        boolean feedLocked = false;//LocalDateTime.now().isBefore(end);
+        //boolean feedLocked = LocalDateTime.now().isBefore(end);
+        boolean feedLocked = false;
 
         model.addAttribute("feedLocked", feedLocked);
         model.addAttribute("unlockTime", end);
@@ -148,10 +151,6 @@ public class FeedController {
 
         for (GroupResponse r : responses) {
             Prompt prompt = promptRepository.findById(r.getPromptId()).orElseThrow();
-            String spotifyTrackUrl = r.getSpotifyTrackUrl();
-            if (spotifyTrackUrl == null || spotifyTrackUrl.isBlank()) {
-                spotifyTrackUrl = spotifyPlaylistService.normalizeSpotifyTrackUrl(r.getResponseText());
-            }
 
             Map<String, Object> responseData = new LinkedHashMap<>();
             responseData.put("responseId", r.getId());
@@ -159,14 +158,19 @@ public class FeedController {
             responseData.put("userId", r.getUserId());
             responseData.put("userName", r.getUser() != null ? r.getUser().getName() : null);
             responseData.put("imageUrl", r.getImageUrl());
-            responseData.put("spotifyTrackUrl", spotifyTrackUrl);
-            responseData.put("spotifyTrack", spotifyTrackUrl == null ? null : spotifyPlaylistService.buildTrackLink(spotifyTrackUrl));
+            responseData.put("spotifyTrackUrl", r.getSpotifyTrackUrl());
 
             newsletter.computeIfAbsent(prompt, k -> new ArrayList<>()).add(responseData);
         }
 
         model.addAttribute("group", group);
         model.addAttribute("cycle", cycle);
+
+        String monthName = cycle.getCycleStart()
+                .getMonth()
+                .getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.ENGLISH);
+
+        model.addAttribute("monthName", monthName);
         model.addAttribute("newsletter", newsletter);
         model.addAttribute("soundtrackLinks", spotifyPlaylistService.buildTrackLinks(new ArrayList<>(soundtrackLinks)));
         model.addAttribute("reactionCountsByResponse", reactionCountsByResponse);

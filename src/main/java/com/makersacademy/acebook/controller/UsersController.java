@@ -3,6 +3,7 @@ package com.makersacademy.acebook.controller;
 import com.makersacademy.acebook.model.User;
 import com.makersacademy.acebook.repository.UserRepository;
 import com.makersacademy.acebook.service.UserProfileStatsService;
+import com.makersacademy.acebook.repository.GroupMembershipRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,6 +15,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import com.makersacademy.acebook.service.CloudinaryService;
 import org.springframework.web.multipart.MultipartFile;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -29,6 +31,9 @@ public class UsersController {
 
     @Autowired
     UserProfileStatsService userProfileStatsService;
+
+    @Autowired
+    GroupMembershipRepository groupMembershipRepository;
 
     @GetMapping("/users/after-login")
     public RedirectView afterLogin(HttpSession session) {
@@ -161,7 +166,35 @@ public class UsersController {
         currentUser.get().setPhoneNumber(phoneNumber);
         currentUser.get().setBio(bio);
         userRepository.save(currentUser.get());
-        return new RedirectView("/users/{id}");
+        return new RedirectView("/users/" + id);
+    }
+
+    @Transactional
+    @PostMapping("/users/{id}/delete")
+    public RedirectView deleteAccount(@PathVariable Long id,
+                                      @AuthenticationPrincipal DefaultOidcUser oidcUser,
+                                      HttpSession session) {
+
+        // find the currently logged-in app user
+        User currentUser = userRepository.findUserByEmail(oidcUser.getEmail())
+                .orElseThrow();
+
+        // only allow users to delete their own profile
+        if (!currentUser.getId().equals(id)) {
+            throw new RuntimeException("You cannot delete another user's account");
+        }
+
+        // remove user from all groups first
+        groupMembershipRepository.deleteByUser(currentUser);
+
+        // then delete the user itself
+        userRepository.delete(currentUser);
+
+        // clear session data
+        session.invalidate();
+
+        // log out fully
+        return new RedirectView("/logout");
     }
 
     private User getCurrentUser() {

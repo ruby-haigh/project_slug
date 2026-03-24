@@ -43,7 +43,7 @@
                      th:onclick="${hasFeedMap[group.id]} ? 'window.location.href=\'/feed/' + ${group.id} + '\''">
                     <div class="home-card-body text-center">
                         <div class="home-card-illustration">
-                            <div class="home-card-icon">☺</div>
+                            <div class="home-card-icon" th:text="${group.icon}">✧</div>
                         </div>
 
                         <h5 class="home-card-title" th:text="${group.name}">Group Name</h5>
@@ -72,7 +72,7 @@
                      th:onclick="${hasFeedMap[group.id]} ? 'window.location.href=\'/feed/' + ${group.id} + '\''">
                     <div class="home-card-body text-center">
                         <div class="home-card-illustration">
-                            <div class="home-card-icon">✧</div>
+                            <div class="home-card-icon" th:text="${group.icon}">✧</div>
                         </div>
 
                         <h5 class="home-card-title" th:text="${group.name}">Group Name</h5>
@@ -100,7 +100,7 @@
                      th:onclick="${hasFeedMap[group.id]} ? 'window.location.href=\'/feed/' + ${group.id} + '\''">
                     <div class="home-card-body text-center">
                         <div class="home-card-illustration">
-                            <div class="home-card-icon">✉</div>
+                            <div class="home-card-icon" th:text="${group.icon}">✧</div>
                         </div>
 
                         <h5 class="home-card-title" th:text="${group.name}">Group Name</h5>

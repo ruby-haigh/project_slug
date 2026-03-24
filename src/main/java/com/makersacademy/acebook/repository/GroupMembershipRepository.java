@@ -14,6 +14,7 @@ public interface GroupMembershipRepository extends JpaRepository<GroupMembership
     Optional<GroupMembership> findByUserAndGroup(User user, Group group);
     List<GroupMembership> findByGroup(Group group);
     List<GroupMembership> findByUser(User user);
+    void deleteByUser(User user);
 
     @Query("SELECT gm.group FROM GroupMembership gm WHERE gm.user = :user")
     List<Group> findGroupsByUser(@Param("user") User user);
