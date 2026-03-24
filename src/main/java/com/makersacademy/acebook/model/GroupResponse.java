@@ -33,7 +33,7 @@ public class GroupResponse {
     @Column(name = "prompt_id", nullable = false)
     private Long promptId;
 
-    @Column(name = "response_text", nullable = false)
+    @Column(name = "response_text", nullable = true)
     private String responseText;
 
     @Column(name = "created_at")
