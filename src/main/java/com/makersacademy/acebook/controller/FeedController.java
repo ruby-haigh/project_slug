@@ -165,7 +165,7 @@ public class FeedController {
             responseData.put("userId", r.getUserId());
             responseData.put("userName", r.getUser() != null ? r.getUser().getName() : null);
             responseData.put("userEmail", r.getUser() != null ? r.getUser().getEmail() : null);
-            responseData.put("userPhone", r.getUser() != null ? r.getUser().getPhoneNumber() : null);
+            responseData.put("userPhone", r.getUser() != null ? r.getUser().getWhatsAppNumber() : null);
             responseData.put("userAvatar", r.getUser() != null ? r.getUser().getProfilePictureUrl() : null);
             responseData.put("userAvatarColour", r.getUser() != null ? r.getUser().getAvatarColour() : null);
             responseData.put("userGroupCount", userGroupCount);

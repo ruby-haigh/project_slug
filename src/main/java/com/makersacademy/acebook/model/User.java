@@ -57,6 +57,7 @@ public class User {
             cleaned = "44" + cleaned.substring(1);
         }
 
+        System.out.println("Cleaned number is" + cleaned);
         return cleaned;
     }
 }
