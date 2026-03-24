@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface PromptRepository extends JpaRepository<Prompt, Long> {
 
-    @Query(value = "SELECT * FROM prompts ORDER BY RANDOM() LIMIT 3", nativeQuery = true)
+    @Query(value = "SELECT * FROM prompts ORDER BY RANDOM() LIMIT 4", nativeQuery = true)
     List<Prompt> findRandomPrompts();
 
     @Query(value = """
