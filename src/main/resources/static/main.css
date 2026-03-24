@@ -228,6 +228,48 @@ h6 {
     color: var(--color-text-primary);
 }
 
+.account-shell {
+    padding-bottom: 2rem;
+}
+
+.account-heading {
+    text-align: center;
+}
+
+.account-kicker {
+    display: inline-block;
+    margin-bottom: 0.35rem;
+    padding: 0.2rem 0.8rem;
+    border-radius: 999px;
+    background: rgba(243, 215, 191, 0.55);
+    color: var(--color-text-secondary);
+    font-family: var(--font-handwritten);
+    font-size: 1.35rem;
+    line-height: 1;
+}
+
+.account-card {
+    border-radius: 26px;
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow: 0 18px 38px rgba(95, 87, 78, 0.08);
+}
+
+.account-avatar {
+    border: 4px solid rgba(255, 255, 255, 0.92);
+    box-shadow: 0 10px 24px rgba(95, 87, 78, 0.14);
+}
+
+.account-detail-row {
+    padding: 0.85rem 0;
+    border-top: 1px dashed rgba(139, 134, 128, 0.18);
+}
+
+.account-detail-row:first-of-type {
+    border-top: 0;
+    padding-top: 0;
+}
+
 .home-cta-row {
     display: flex;
     justify-content: center;
@@ -1169,6 +1211,68 @@ h6 {
     display: block;
     color: rgba(58, 58, 58, 0.65);
     font-size: 0.94rem;
+}
+
+.feed-song-card {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.95rem 1rem;
+    border-radius: 20px;
+    background: linear-gradient(180deg, rgba(232, 243, 236, 0.95), rgba(245, 249, 246, 0.95));
+    border: 1px solid rgba(122, 155, 142, 0.16);
+}
+
+.feed-song-icon {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(122, 155, 142, 0.15);
+    color: #5f8574;
+    font-size: 1.35rem;
+}
+
+.feed-song-copy {
+    min-width: 0;
+    flex: 1;
+}
+
+.feed-song-label {
+    color: rgba(58, 58, 58, 0.58);
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.feed-song-title {
+    display: block;
+    font-size: 1rem;
+    color: #3f3d3b;
+}
+
+.feed-song-artist {
+    color: rgba(58, 58, 58, 0.72);
+    font-size: 0.92rem;
+}
+
+.feed-song-link {
+    flex-shrink: 0;
+    padding: 0.6rem 0.9rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.86);
+    color: #3f3d3b;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 8px 16px rgba(95, 87, 78, 0.08);
+}
+
+.feed-song-link:hover {
+    color: #3f3d3b;
+    transform: translateY(-1px);
 }
 
 

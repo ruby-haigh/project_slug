@@ -18,6 +18,9 @@ public class User {
     private Long id;
     private String email;
     private String name;
+    private Integer age;
+    @Column(name = "phone_number")
+    private String phoneNumber;
     private String bio;
     private String profilePictureUrl;
 
@@ -25,6 +28,12 @@ public class User {
         this.email = email;
         this.name = name;
         this.bio = bio;
+    }
+
+    public boolean isProfileComplete() {
+        return name != null && !name.isBlank()
+                && age != null
+                && phoneNumber != null && !phoneNumber.isBlank();
     }
 
     public String getAvatarColour() {

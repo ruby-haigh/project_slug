@@ -136,40 +136,19 @@ public class SpotifyPlaylistService {
             return links;
         }
 
-        String accessToken = null;
-        if (isConfigured()) {
-            try {
-                accessToken = fetchAccessToken();
-            } catch (Exception exception) {
-                System.out.println("Spotify track metadata lookup failed: " + exception.getMessage());
-            }
-        }
+        String accessToken = resolveAccessTokenForMetadata();
 
         int index = 1;
         for (String trackUrl : trackUrls) {
-            String trackId = extractTrackId(trackUrl);
-            if (trackId == null) {
-                links.add(new SpotifyTrackLink(trackUrl, "Open song " + index, ""));
-                index++;
-                continue;
-            }
-
-            if (accessToken == null) {
-                links.add(new SpotifyTrackLink(trackUrl, "Open song " + index, ""));
-                index++;
-                continue;
-            }
-
-            try {
-                links.add(fetchTrackDetails(trackId, trackUrl, accessToken, index));
-            } catch (Exception exception) {
-                System.out.println("Spotify track detail fetch failed: " + exception.getMessage());
-                links.add(new SpotifyTrackLink(trackUrl, "Open song " + index, ""));
-            }
+            links.add(buildTrackLink(trackUrl, accessToken, index));
             index++;
         }
 
         return links;
+    }
+
+    public SpotifyTrackLink buildTrackLink(String trackUrl) {
+        return buildTrackLink(trackUrl, resolveAccessTokenForMetadata(), 1);
     }
 
     public String syncPlaylistForCycle(Group group, GroupCycle cycle, List<GroupResponse> responses) {
@@ -245,6 +224,37 @@ public class SpotifyPlaylistService {
 
         JsonNode json = objectMapper.readTree(response.body());
         return json.path("access_token").asText(null);
+    }
+
+    private String resolveAccessTokenForMetadata() {
+        if (!isConfigured()) {
+            return null;
+        }
+
+        try {
+            return fetchAccessToken();
+        } catch (Exception exception) {
+            System.out.println("Spotify track metadata lookup failed: " + exception.getMessage());
+            return null;
+        }
+    }
+
+    private SpotifyTrackLink buildTrackLink(String trackUrl, String accessToken, int index) {
+        String trackId = extractTrackId(trackUrl);
+        if (trackId == null) {
+            return new SpotifyTrackLink(trackUrl, "Open song " + index, "");
+        }
+
+        if (accessToken == null) {
+            return new SpotifyTrackLink(trackUrl, "Open song " + index, "");
+        }
+
+        try {
+            return fetchTrackDetails(trackId, trackUrl, accessToken, index);
+        } catch (Exception exception) {
+            System.out.println("Spotify track detail fetch failed: " + exception.getMessage());
+            return new SpotifyTrackLink(trackUrl, "Open song " + index, "");
+        }
     }
 
     private PlaylistDetails createPlaylist(Group group, GroupCycle cycle, String accessToken) throws IOException, InterruptedException {
