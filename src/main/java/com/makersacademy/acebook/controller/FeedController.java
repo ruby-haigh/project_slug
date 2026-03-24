@@ -152,11 +152,19 @@ public class FeedController {
         for (GroupResponse r : responses) {
             Prompt prompt = promptRepository.findById(r.getPromptId()).orElseThrow();
 
+            User responseUser = r.getUser();
+            long userGroupCount = responseUser != null ? membershipRepository.countByUser(responseUser) : 0;
+
             Map<String, Object> responseData = new LinkedHashMap<>();
             responseData.put("responseId", r.getId());
             responseData.put("responseText", r.getResponseText());
             responseData.put("userId", r.getUserId());
             responseData.put("userName", r.getUser() != null ? r.getUser().getName() : null);
+            responseData.put("userEmail", r.getUser() != null ? r.getUser().getEmail() : null);
+            responseData.put("userPhone", r.getUser() != null ? r.getUser().getPhoneNumber() : null);
+            responseData.put("userAvatar", r.getUser() != null ? r.getUser().getProfilePictureUrl() : null);
+            responseData.put("userAvatarColour", r.getUser() != null ? r.getUser().getAvatarColour() : null);
+            responseData.put("userGroupCount", userGroupCount);
             responseData.put("imageUrl", r.getImageUrl());
             responseData.put("spotifyTrackUrl", r.getSpotifyTrackUrl());
 
@@ -165,6 +173,7 @@ public class FeedController {
 
         model.addAttribute("group", group);
         model.addAttribute("cycle", cycle);
+        model.addAttribute("currentUserId", userId);
 
         String monthName = cycle.getCycleStart()
                 .getMonth()

@@ -20,4 +20,5 @@ public interface GroupMembershipRepository extends JpaRepository<GroupMembership
     List<Group> findGroupsByUser(@Param("user") User user);
 
     long countByGroup(Group group);
+    long countByUser(User user);
 }
