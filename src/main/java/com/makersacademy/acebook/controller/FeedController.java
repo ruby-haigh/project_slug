@@ -151,6 +151,10 @@ public class FeedController {
 
         for (GroupResponse r : responses) {
             Prompt prompt = promptRepository.findById(r.getPromptId()).orElseThrow();
+            String spotifyTrackUrl = r.getSpotifyTrackUrl();
+            if (spotifyTrackUrl == null || spotifyTrackUrl.isBlank()) {
+                spotifyTrackUrl = spotifyPlaylistService.normalizeSpotifyTrackUrl(r.getResponseText());
+            }
 
             User responseUser = r.getUser();
             long userGroupCount = responseUser != null ? membershipRepository.countByUser(responseUser) : 0;
@@ -165,8 +169,12 @@ public class FeedController {
             responseData.put("userAvatar", r.getUser() != null ? r.getUser().getProfilePictureUrl() : null);
             responseData.put("userAvatarColour", r.getUser() != null ? r.getUser().getAvatarColour() : null);
             responseData.put("userGroupCount", userGroupCount);
+            responseData.put("userEmail", r.getUser() != null ? r.getUser().getEmail() : null);
+            responseData.put("userProfilePictureUrl", r.getUser() != null ? r.getUser().getProfilePictureUrl() : null);
+            responseData.put("userAvatarColour", r.getUser() != null ? r.getUser().getAvatarColour() : "c4def2");
             responseData.put("imageUrl", r.getImageUrl());
-            responseData.put("spotifyTrackUrl", r.getSpotifyTrackUrl());
+            responseData.put("spotifyTrackUrl", spotifyTrackUrl);
+            responseData.put("spotifyTrack", spotifyTrackUrl != null ? spotifyPlaylistService.buildTrackLink(spotifyTrackUrl) : null);
 
             newsletter.computeIfAbsent(prompt, k -> new ArrayList<>()).add(responseData);
         }
