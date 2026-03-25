@@ -47,7 +47,11 @@ public class GroupTest {
         WebElement newGroupButton = driver.findElement(By.className("scrapbook-button"));
         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", newGroupButton);
 
-        String groupName = (driver.findElement(By.className("scrapbook-card-title"))).getText();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement createdGroup = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(By.className("scrapbook-card-title"))
+        );
+        String groupName = createdGroup.getText();
 
         assertEquals("example-group", groupName);
     }
