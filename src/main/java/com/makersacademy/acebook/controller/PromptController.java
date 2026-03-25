@@ -123,7 +123,7 @@ public class PromptController {
             if (!songPrompts.isEmpty()) {
                 Prompt songPrompt = songPrompts.get(0);
                 randomPrompts.add(songPrompt);
-                randomPrompts.addAll(promptRepository.findRandomPromptsExcluding(songPrompt.getId(), 3));
+                randomPrompts.addAll(promptRepository.findRandomNonSongPromptsExcluding(songPrompt.getId(), 3));
             } else {
                 randomPrompts = promptRepository.findRandomPrompts();
             }

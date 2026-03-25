@@ -135,7 +135,10 @@ public class GroupController {
                             @RequestParam(required = false) String email,
                             HttpServletRequest request,
                             HttpSession session) {
-        groupRepository.findById(groupId).orElseThrow();
+        if (groupRepository.findById(groupId).isEmpty()) {
+            return "redirect:/circles/join?error="
+                    + URLEncoder.encode("That invite link is no longer valid.", StandardCharsets.UTF_8);
+        }
 
         String inviteLink = ServletUriComponentsBuilder.fromRequest(request)
                 .replaceQueryParam("email", email)
