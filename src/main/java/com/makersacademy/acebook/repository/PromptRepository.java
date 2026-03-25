@@ -29,8 +29,12 @@ public interface PromptRepository extends JpaRepository<Prompt, Long> {
             SELECT *
             FROM prompts
             WHERE id <> :excludedPromptId
+              AND LOWER(prompt) NOT LIKE '%spotify%'
+              AND LOWER(prompt) NOT LIKE '%song%'
+              AND LOWER(prompt) NOT LIKE '%track%'
+              AND LOWER(prompt) NOT LIKE '%playlist%'
             ORDER BY RANDOM()
             LIMIT :limit
             """, nativeQuery = true)
-    List<Prompt> findRandomPromptsExcluding(Long excludedPromptId, int limit);
+    List<Prompt> findRandomNonSongPromptsExcluding(Long excludedPromptId, int limit);
 }
